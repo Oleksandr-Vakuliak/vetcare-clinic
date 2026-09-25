@@ -4,10 +4,11 @@ import { localeMeta, type Locale } from './i18n/config';
 // month names, weekday names and full dates are localized automatically.
 
 export function formatMonthYear(date: Date, locale: Locale): string {
-  return new Intl.DateTimeFormat(localeMeta[locale].intl, {
-    month: 'long',
-    year: 'numeric',
-  }).format(date);
+  const intl = localeMeta[locale].intl;
+  const text = new Intl.DateTimeFormat(intl, { month: 'long', year: 'numeric' }).format(date);
+  // Capitalize only the first letter: "вересень 2026 р." → "Вересень 2026 р."
+  // (CSS `text-transform: capitalize` would also turn "р." into "Р.").
+  return text.charAt(0).toLocaleUpperCase(intl) + text.slice(1);
 }
 
 export function formatFullDate(date: Date, locale: Locale): string {
