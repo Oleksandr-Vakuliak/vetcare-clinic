@@ -19,6 +19,7 @@ const skipLabel: Record<Locale, string> = {
   ro: 'Sari la conținut',
   uk: 'Перейти до вмісту',
   en: 'Skip to content',
+  pl: 'Przejdź do treści',
 };
 
 export async function generateMetadata({ params }: LangParams): Promise<Metadata> {
