@@ -29,6 +29,16 @@ const dict: Dictionary = {
     imageAlt: "Veterinarian holding a cat",
     note: "More happy days together",
   },
+  demoGuide: {
+    title: "This is a demo — try it in a minute",
+    text: "All data is fictional and stays only in your browser.",
+    steps: [
+      { title: "Book a visit", text: "In the pet account, choose Murchyk or Luna and a free time.", link: "Pet account" },
+      { title: "Confirm it", text: "In the admin panel, find the request “Awaiting confirmation”.", link: "Admin panel" },
+      { title: "Check the status", text: "Go back to the pet account — the visit is now confirmed.", link: "Pet account" },
+    ],
+    formNote: "The booking form below also sends a request to the admin panel.",
+  },
   services: {
     title: "Our services",
     items: [

@@ -29,6 +29,16 @@ const dict: Dictionary = {
     imageAlt: "Medic veterinar ținând o pisică în brațe",
     note: "Mai multe zile fericite împreună",
   },
+  demoGuide: {
+    title: "Acesta este un proiect demo — încercați-l într-un minut",
+    text: "Toate datele sunt fictive și rămân doar în browserul dvs.",
+    steps: [
+      { title: "Programați animalul", text: "În contul animalului alegeți Murcik sau Luna și o oră liberă.", link: "Contul animalului" },
+      { title: "Confirmați programarea", text: "În panoul de administrare găsiți cererea „Așteaptă confirmarea”.", link: "Panou de administrare" },
+      { title: "Verificați starea", text: "Reveniți în contul animalului — programarea este confirmată.", link: "Contul animalului" },
+    ],
+    formNote: "Formularul de programare de mai jos trimite și el o cerere în panoul de administrare.",
+  },
   services: {
     title: "Serviciile noastre",
     items: [
