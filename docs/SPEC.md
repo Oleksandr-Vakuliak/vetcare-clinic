@@ -30,6 +30,7 @@ works on phone/tablet/desktop, accessible by keyboard and screen reader.
 - **Demo mode** for contacts: messenger/call actions explain themselves when real
   contacts are not configured.
 - Content edited directly in source files (dictionaries, `site-config.ts`, images).
+- **Demo "Pet account"** at `/[locale]/account` (§10) — browser-only, no real login.
 
 ### Out of scope (now)
 - Any backend, database, authentication, or admin panel.
@@ -176,7 +177,48 @@ tidy map placeholder (no random real clinic). Prominent "Демонстраці�
 - Verified on narrow and wide viewports.
 - README explains run, deploy, and where to edit photos/translations/contacts.
 
-## 10. Open questions
+## 10. Pet account (demo)
+
+**Purpose.** Portfolio example of a client area focused on the animal (no owner photo or
+data). Visual reference: the owner's account mockup (PNG); matches the site's palette.
+
+**Entry.** Secondary "Кабінет улюбленця" link on the home page → `/[locale]/account`, no
+login. Account header: logo, "На сайт клініки" link, the site's language menu (switching
+keeps the selected pet and tab). Label "Демонстраційний кабінет · Усі дані вигадані".
+
+**Features**
+- Pet switcher: cards with small photos (demo cat Мурчик, dog Луна) + "Додати улюбленця".
+- Profile: large photo, name, species, breed, age (computed from birth date), weight,
+  "Редагувати профіль". No health ratings or "healthy" claims.
+- Next appointment: date, time, reason, fictional doctor; empty state if none. "Записати на
+  прийом" reuses the demo calendar; past dates and busy/taken slots can't be chosen. The
+  new appointment belongs to the selected pet, with the notice "Демонстраційний прийом
+  додано лише в цьому браузері. Клініку не повідомлено".
+- Next vaccination reminder with "Переглянути" → Vaccinations tab. Dates are conditional,
+  not medical advice.
+- Tabs: visit history (date, reason, doctor → details with a short demo note, no treatment
+  plans); vaccinations (name, date, next date if set); documents (clearly marked demo
+  texts shown in a dialog; no download, not an official passport).
+- Add/edit pet form: name, species (cat/dog), breed, birth date, weight. Validation:
+  required fields, real past birth date, weight > 0. New pets get a stock cat/dog photo
+  and no invented history (empty states explain why).
+
+**Data & storage.** Seed data in code, generated relative to the first visit (upcoming
+dates stay in the future). Changes live only in `localStorage` (never sent). Notice:
+"Зміни зберігаються лише в цьому браузері. Не вводьте реальні персональні чи медичні
+дані". "Скинути демодані" with confirmation. If storage is unavailable or data is
+invalid, the account works with the seed data. No hydration errors, no flash of another
+language.
+
+**Done when**
+- RO/UK/EN/PL fully translated (UI, messages, demo records); both pets switch correctly.
+- Add/edit pet, demo booking (appears on the right pet), tabs, document dialog and empty
+  states work; changes survive reload; reset restores the seed.
+- Phone: one column, no page-wide horizontal overflow; labelled fields, visible focus,
+  keyboard use; dialogs trap focus, close on Escape and return focus.
+- Unit tests for the data logic and the key scenario; lint, TypeScript and build pass.
+
+## 11. Open questions
 
 - Which browsers/devices to formally test beyond Chromium (Safari/iOS)?
 - Final decision on Polish: include now or keep as backlog?
