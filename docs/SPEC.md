@@ -18,15 +18,14 @@ potential clients. Secondary goal: serve as a reusable reference for future real
 - **The clinic's would-be visitors (simulated)** — find services, meet the team, "book"
   a time, reach the clinic, and see how to get urgent help.
 
-Success = no broken buttons, no console errors, fully translated in three languages,
+Success = no broken buttons, no console errors, fully translated in four languages,
 works on phone/tablet/desktop, accessible by keyboard and screen reader.
 
 ## 3. Scope
 
 ### In scope
 - Static, single-page site with the eight sections in §5.
-- Three complete languages: **Romanian (primary), Ukrainian, English**; structure ready
-  for Polish.
+- Four complete languages: **Romanian (primary), Ukrainian, English, Polish**.
 - **Demo** booking calendar + inquiry form (validation only — no submission, no storage).
 - **Demo mode** for contacts: messenger/call actions explain themselves when real
   contacts are not configured.
@@ -66,7 +65,7 @@ works on phone/tablet/desktop, accessible by keyboard and screen reader.
 Each section below is a work item; acceptance criteria are the "done" checklist.
 
 ### 5.1 Header
-Clinic name + simple mark; navigation to services, doctors, booking, contacts; RO/UK/EN
+Clinic name + simple mark; navigation to services, doctors, booking, contacts; RO/UK/EN/PL
 switcher. Compact working menu on mobile.
 - AC: sticky header; desktop nav + language switcher; mobile hamburger toggles an
   accessible panel (nav + language + primary CTA); current language marked
@@ -127,7 +126,7 @@ tidy map placeholder (no random real clinic). Prominent "Демонстраці�
   redirects `/` → `/ro`.
 - Server components by default; client components only for interactive parts (header menu,
   language switcher, calendar, form, emergency modal).
-- Content: `src/lib/i18n/dictionaries/{ro,uk,en}.ts` (shape enforced by `Dictionary`
+- Content: `src/lib/i18n/dictionaries/{ro,uk,en,pl}.ts` (shape enforced by `Dictionary`
   type), `src/lib/site-config.ts` (contacts), `public/images/` (photos).
 - Deploy target: Vercel (no environment variables required).
 
@@ -135,8 +134,9 @@ tidy map placeholder (no random real clinic). Prominent "Демонстраці�
 
 - All user-facing text lives in the dictionaries; components never hard-code copy.
 - Dates, month names, and weekdays come from `Intl` using each locale's BCP-47 tag.
-- **Add Polish (future):** add `'pl'` to `locales` and `localeMeta`, create `pl.ts`, and
-  register a loader — no component changes.
+- **Add a language:** add it to `locales` and `localeMeta`, create its dictionary, register a
+  loader, and add the skip-link label in `app/[lang]/layout.tsx` (type-checked). Polish was
+  added this way (2026-09-25).
 
 ## 8. Assets & rights
 
@@ -145,7 +145,7 @@ tidy map placeholder (no random real clinic). Prominent "Демонстраці�
 
 ## 9. Definition of Done (project-level)
 
-- All eight sections implemented and localized in RO/UK/EN.
+- All eight sections implemented and localized in RO/UK/EN/PL.
 - `npm run build` and `npx tsc --noEmit` pass; `npm run lint` clean.
 - No console errors; no horizontal overflow; no dead buttons.
 - Keyboard + screen-reader friendly; modal focus handling correct.
