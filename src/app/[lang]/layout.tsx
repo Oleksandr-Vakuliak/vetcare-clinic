@@ -5,6 +5,8 @@ import { Caveat, Inter } from 'next/font/google';
 import '../globals.css';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { locales, localeMeta, isLocale, type Locale } from '@/lib/i18n/config';
+import { siteUrl } from '@/lib/site-config';
+import { socialMetadata } from '@/lib/seo';
 
 interface LangParams {
   params: Promise<{ lang: string }>;
@@ -43,8 +45,11 @@ export async function generateMetadata({ params }: LangParams): Promise<Metadata
   if (!isLocale(lang)) return {};
   const dict = await getDictionary(lang);
   return {
+    // Base for absolute URLs in link previews (og:image, og:url).
+    metadataBase: new URL(siteUrl),
     title: dict.meta.title,
     description: dict.meta.description,
+    ...socialMetadata(lang, dict.header.clinicName, dict.meta.title, dict.meta.description, dict.hero.imageAlt),
     alternates: {
       // Generated from `locales`, so a new language gets its hreflang link automatically.
       languages: Object.fromEntries(locales.map((l) => [localeMeta[l].htmlLang, `/${l}`])),

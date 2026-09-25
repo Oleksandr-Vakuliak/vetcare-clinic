@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { notFound } from 'next/navigation';
 import { getAccountDictionary, getAdminDictionary, getDictionary } from '@/lib/i18n/dictionaries';
 import { isLocale } from '@/lib/i18n/config';
+import { socialMetadata } from '@/lib/seo';
 import { AdminProvider } from '@/components/admin/AdminContext';
 import AdminShell from '@/components/admin/AdminShell';
 
@@ -13,10 +14,11 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { lang } = await params;
   if (!isLocale(lang)) return {};
-  const a = await getAdminDictionary(lang);
+  const [site, a] = await Promise.all([getDictionary(lang), getAdminDictionary(lang)]);
   return {
     title: a.metaTitle,
     description: a.demoBanner,
+    ...socialMetadata(lang, site.header.clinicName, a.metaTitle, a.demoBanner, site.hero.imageAlt),
     // Open demo with fictional data — keep it out of search results.
     robots: { index: false },
   };
