@@ -87,6 +87,23 @@ export function updateDemo(change: (state: DemoState) => DemoState) {
   emit();
 }
 
+/**
+ * Runs a model operation on the latest state; saves it when it succeeds.
+ * Returns the error code of a refused operation, or null.
+ */
+export function commitDemo<E extends string>(
+  operation: (state: DemoState) => { ok: true; state: DemoState } | { ok: false; error: E },
+): E | null {
+  const out: { error: E | null } = { error: null };
+  updateDemo((state) => {
+    const result = operation(state);
+    if (result.ok) return result.state;
+    out.error = result.error;
+    return state;
+  });
+  return out.error;
+}
+
 /** Resets everything (admin data, pet account, calendar) to a fresh seed. */
 export function resetDemo() {
   clearState(storage());
