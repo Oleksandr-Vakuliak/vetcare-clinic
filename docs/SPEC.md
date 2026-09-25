@@ -326,7 +326,33 @@ vaccinations, documents, doctors' weekly hours/breaks, closed slots and UI state
   appointments shown in the pet account and the site calendar. Nothing is ever sent to a
   server, e-mail or messenger.
 
-## 13. Open questions
+## 13. Presentation for clients
+
+Small additions that make the demo easy to show (issues #20–#22).
+
+**13.1 Demo guide on the home page (#20).** A compact band right after the hero (the hero
+composition stays as in the mockup): "Це демо-проєкт — спробуйте за хвилину" and three
+numbered steps with links: 1) pet account — book a visit for a pet; 2) admin panel —
+confirm the request; 3) back in the pet account — the status has changed. A short line
+adds that the site form also sends a request to the admin panel. Honest wording: all data
+is fictional and stays in this browser.
+- AC: RO/UK/EN/PL; links go to `/[locale]/account`, `/[locale]/admin/appointments`;
+  no horizontal overflow at 320 px; keyboard focus visible; no animations.
+
+**13.2 Link preview — Open Graph (#21).** Every page shares a 1200×630 image (hero photo,
+dark gradient, "VetClinic" + language-neutral caption, generated at build time with
+`opengraph-image.tsx`) plus `og:title`, `og:description`, `og:locale`, `og:site_name`,
+`og:type` and `twitter:card = summary_large_image`. Absolute URLs use `siteUrl` from
+`src/lib/site-config.ts` (change it together with a custom domain).
+- AC: tags present on every locale; image reachable with 200; lint/types/build pass.
+
+**13.3 Custom 404 (#22).** Any unknown address inside a locale (`/uk/xyz`,
+`/pl/admin/xyz`, …) shows a branded page in that language — "Сторінку не знайдено", short
+text, links to the home page, the pet account and the admin panel — with HTTP status 404
+and `noindex`. Paths without a locale are already redirected to `/ro/...` by `proxy.ts`.
+- AC: 4 languages, correct `<html lang>`, status 404, phone layout, no console errors.
+
+## 14. Open questions
 
 - Which browsers/devices to formally test beyond Chromium (Safari/iOS)?
 - Final decision on Polish: include now or keep as backlog?
