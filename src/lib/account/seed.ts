@@ -34,7 +34,7 @@ export function createSeed(today: Date): AccountState {
   ];
 
   const murchykCheckupVisitDate = addDays(todayIso, -10);
-  const murchykVaccinationVisitDate = addDays(todayIso, -310);
+  const murchykVaccinationVisitDate = addDays(todayIso, -309);
   const lunaDentalVisitDate = addDays(todayIso, -45);
   const lunaCheckupVisitDate = addDays(todayIso, -200);
 
@@ -109,7 +109,7 @@ export function createSeed(today: Date): AccountState {
         petId: 'murchyk',
         nameKey: 'complexCat',
         date: murchykVaccinationVisitDate,
-        nextDate: addDays(todayIso, 33),
+        nextDate: addDays(todayIso, 90),
       },
       {
         id: 'vacc-luna-1',
