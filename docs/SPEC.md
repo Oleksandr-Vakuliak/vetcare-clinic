@@ -64,15 +64,28 @@ works on phone/tablet/desktop, accessible by keyboard and screen reader.
 
 Each section below is a work item; acceptance criteria are the "done" checklist.
 
+**Visual reference:** the owner's design mockup (single-page PNG, Ukrainian). Composition,
+proportions, spacing, colours, type sizes and block styling follow it; where the mockup
+conflicts with the rules below (honest demo content, accessibility), these rules win.
+Palette: sage/forest green on warm off-white, red only for urgent help. Fonts: Inter (text)
+and Caveat (short handwritten accents), self-hosted via `next/font`. No animations.
+
 ### 5.1 Header
-Clinic name + simple mark; navigation to services, doctors, booking, contacts; RO/UK/EN/PL
-switcher. Compact working menu on mobile.
-- AC: sticky header; desktop nav + language switcher; mobile hamburger toggles an
-  accessible panel (nav + language + primary CTA); current language marked
-  `aria-current`; menu closes on link click and Escape.
+Paw mark + clinic name; centred navigation to services, doctors, booking, contacts;
+compact language menu. Compact working menu on mobile.
+- AC: sticky header; desktop nav + language menu; mobile hamburger toggles an accessible
+  panel (nav + primary CTA); menu closes on link click and Escape.
+- Language menu: one button with the current short label and a down arrow (RO ▾, UA ▾,
+  EN ▾, PL ▾) opens Română / Українська / English / Polski with a check mark on the current
+  one (`aria-current`). Choosing navigates to that language and closes the list; click
+  outside, Escape and Tab close it; arrow keys / Home / End move focus. Labels and names
+  use `translate="no"`. "UA" is only the visible label — the locale code and URL stay
+  `uk` / `/uk`. On phones it sits in the header next to the menu button and stays on
+  screen.
 
 ### 5.2 Hero
-Large still photo (vet with a cat) as the visual; strong text contrast.
+Large full-width photo (vet with a cat) with a dark gradient; white text; a short
+handwritten accent ("Більше щасливих днів разом ♡").
 - AC: heading "Турбота про тих, кого ви любите" (localized); subtitle about cats & dogs
   and easy booking; "Обрати час" → booking, "Зв'язатися" → contacts; hero image is
   **not** lazy-loaded; readable over the image at all widths.
@@ -80,12 +93,14 @@ Large still photo (vet with a cat) as the visual; strong text contrast.
 ### 5.3 Services
 Six cards: checkup, vaccination, tests, dentistry, ultrasound, consultation. Each with a
 simple icon and short description. No extra pages or dead buttons.
-- AC: six localized cards in a responsive grid (1→2→3 columns); inline SVG icons.
+- AC: six localized horizontal cards (round icon left, title + text right) in a responsive
+  grid (1→2→3 columns); inline SVG icons.
 
 ### 5.4 About & team
 Short text and two veterinarian cards. Fictional clinic — no invented awards, reviews,
 licenses, or credential claims. Profiles marked as demonstration.
-- AC: intro text + demo note; two team cards with photo, role, and demo bio.
+- AC: section title above; intro text + demo note on the left; two horizontal team cards
+  (photo left, role, name, demo bio) on the right.
 
 ### 5.5 Booking (demo calendar + form)
 - Calendar opens on the current month; months navigable forward; future dates selectable;
@@ -93,7 +108,9 @@ licenses, or credential claims. Profiles marked as demonstration.
 - For a selected date, show demo free/busy hours; busy hours not selectable; selected time
   clearly highlighted; local demo data only; label "Демокалендар — години умовні".
 - Form fields: name, phone, animal, reason, preferred communication language (defaults to
-  the site language, changeable). Show the selected date/time near the form.
+  the site language, changeable). Show the selected date/time near the form (a compact
+  line above the submit button). Fields are boxed with an icon; labels stay available to
+  screen readers. Layout on wide screens: calendar card · form · handwritten accent.
 - Validate required fields; phone allows international format. On valid submit show
   "Це демонстрація. Запис не створено, дані не надіслано". **No** data sent or stored; no
   false confirmation.
@@ -104,6 +121,8 @@ licenses, or credential claims. Profiles marked as demonstration.
 file. If real contacts are not set, buttons show a clear demo-mode message — never random
 or third-party accounts. Structure allows adding real links later.
 - AC: demo-mode message shown when unconfigured; buttons become live links when configured.
+- Layout: one row — title + text, two large tinted buttons (WhatsApp green, Telegram blue),
+  handwritten accent.
 
 ### 5.7 Emergency help
 Prominent "Потрібна термінова допомога?" block with a primary "Зателефонувати" action and
@@ -113,9 +132,14 @@ contacts are not configured, clearly say it is demo mode; do not promise 24/7 or
 on-call clinic. On mobile the button must not cover the form or other elements.
 - AC: red accent; floating button; accessible modal (Escape + focus return); compact on
   phones; demo-mode messaging.
+- Layout: pink band — bell icon, title + text, call button, and working hours on the
+  right. The mockup's "after hours — on-call clinic contacts" line is **not** used: no such
+  contacts exist, so the slot shows the real working hours instead.
 
 ### 5.8 Contacts & footer
-Space for a Romania address, working hours, and a map. Until a real address exists, show a
+Contacts live in the footer (as in the mockup; anchor `#contacts`): brand + tagline,
+address and working hours with icons, and the map slot. Space for a Romania address,
+working hours, and a map. Until a real address exists, show a
 tidy map placeholder (no random real clinic). Prominent "Демонстраційний проєкт" badge.
 - AC: address/hours (demo), map placeholder or embed if configured, demo badge, footer.
 
