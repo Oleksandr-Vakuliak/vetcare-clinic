@@ -16,7 +16,6 @@ const dict: Dictionary = {
   },
   header: {
     clinicName: "VetClinic",
-    tagline: "Veterinary Clinic",
     openMenu: "Open menu",
     closeMenu: "Close menu",
     languageLabel: "Site language",
@@ -27,7 +26,7 @@ const dict: Dictionary = {
     ctaBooking: "Choose a time",
     ctaContact: "Contact us",
     imageAlt: "Veterinarian holding a cat",
-    badge: "Your pets' health — our care",
+    note: "More happy days together",
   },
   services: {
     title: "Our services",
@@ -79,6 +78,7 @@ const dict: Dictionary = {
   },
   booking: {
     title: "Choose a convenient time",
+    note: "Care starts here",
     demoNote: "Demo calendar — times are approximate.",
     calendar: {
       prevMonth: "Previous month",
@@ -89,6 +89,8 @@ const dict: Dictionary = {
       noSlots: "No available time slots for this date.",
       chooseDay: "Choose",
       pastDay: "unavailable",
+      availableOn: "Available times on",
+      legendOtherMonth: "Other month",
     },
     form: {
       selectedLabel: "Selected date and time",
@@ -100,7 +102,6 @@ const dict: Dictionary = {
       animalLabel: "Animal",
       animalOptions: { cat: "Cat", dog: "Dog", other: "Other" },
       reasonLabel: "Reason for visit",
-      reasonPlaceholder: "Briefly describe the reason",
       commLangLabel: "Preferred communication language",
       submit: "Book appointment",
       errors: {
@@ -110,6 +111,7 @@ const dict: Dictionary = {
         dateRequired: "Please select a date and time in the calendar.",
       },
       demoSuccess: "This is a demonstration. No appointment was created and no data was submitted.",
+      demoHint: "Demo: no appointment will be created.",
     },
   },
   messengers: {
@@ -117,6 +119,7 @@ const dict: Dictionary = {
     text: "Write to us in a messenger — we will reply as soon as possible.",
     whatsapp: "WhatsApp",
     telegram: "Telegram",
+    note: "Write the way you like",
     demoNote: "Demo mode: messenger contacts are not yet configured.",
   },
   emergency: {
@@ -144,6 +147,7 @@ const dict: Dictionary = {
   footer: {
     demoBadge: "Demo project",
     rights: "Fictional website created for portfolio.",
+    tagline: "Care today — health tomorrow",
   },
 };
 

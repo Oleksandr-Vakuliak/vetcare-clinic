@@ -16,7 +16,6 @@ const dict: Dictionary = {
   },
   header: {
     clinicName: "VetClinic",
-    tagline: "Clinică Veterinară",
     openMenu: "Deschide meniul",
     closeMenu: "Închide meniul",
     languageLabel: "Limba site-ului",
@@ -27,7 +26,7 @@ const dict: Dictionary = {
     ctaBooking: "Alege ora",
     ctaContact: "Contactează-ne",
     imageAlt: "Medic veterinar ținând o pisică în brațe",
-    badge: "Sănătatea animalelor tale — grija noastră",
+    note: "Mai multe zile fericite împreună",
   },
   services: {
     title: "Serviciile noastre",
@@ -79,6 +78,7 @@ const dict: Dictionary = {
   },
   booking: {
     title: "Alege un moment convenabil",
+    note: "Grija începe aici",
     demoNote: "Calendar demonstrativ — orele sunt orientative.",
     calendar: {
       prevMonth: "Luna anterioară",
@@ -89,6 +89,8 @@ const dict: Dictionary = {
       noSlots: "Nu există ore disponibile pentru această dată.",
       chooseDay: "Alege",
       pastDay: "indisponibil",
+      availableOn: "Ore disponibile pe",
+      legendOtherMonth: "Altă lună",
     },
     form: {
       selectedLabel: "Data și ora selectată",
@@ -100,7 +102,6 @@ const dict: Dictionary = {
       animalLabel: "Animal",
       animalOptions: { cat: "Pisică", dog: "Câine", other: "Altul" },
       reasonLabel: "Motivul vizitei",
-      reasonPlaceholder: "Descrieți pe scurt motivul",
       commLangLabel: "Limba preferată de comunicare",
       submit: "Programează-te",
       errors: {
@@ -110,6 +111,7 @@ const dict: Dictionary = {
         dateRequired: "Selectați data și ora din calendar.",
       },
       demoSuccess: "Aceasta este o demonstrație. Programarea nu a fost creată, datele nu au fost trimise.",
+      demoHint: "Demo: programarea nu va fi creată.",
     },
   },
   messengers: {
@@ -117,6 +119,7 @@ const dict: Dictionary = {
     text: "Trimite-ne un mesaj — îți răspundem cât mai repede.",
     whatsapp: "WhatsApp",
     telegram: "Telegram",
+    note: "Scrie-ne cum îți e comod",
     demoNote: "Mod demonstrativ: contactele de mesagerie nu sunt încă configurate.",
   },
   emergency: {
@@ -144,6 +147,7 @@ const dict: Dictionary = {
   footer: {
     demoBadge: "Proiect demonstrativ",
     rights: "Site fictiv creat pentru portofoliu.",
+    tagline: "Grijă azi — sănătate mâine",
   },
 };
 

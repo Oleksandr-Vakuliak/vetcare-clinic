@@ -16,7 +16,6 @@ const dict: Dictionary = {
   },
   header: {
     clinicName: 'VetKlinika',
-    tagline: 'Klinika weterynaryjna',
     openMenu: 'Otwórz menu',
     closeMenu: 'Zamknij menu',
     languageLabel: 'Język strony',
@@ -27,7 +26,7 @@ const dict: Dictionary = {
     ctaBooking: 'Wybierz termin',
     ctaContact: 'Skontaktuj się',
     imageAlt: 'Weterynarz trzymający kota',
-    badge: 'Zdrowie Twoich zwierząt — nasza troska',
+    note: 'Więcej szczęśliwych dni razem',
   },
   services: {
     title: 'Nasze usługi',
@@ -79,6 +78,7 @@ const dict: Dictionary = {
   },
   booking: {
     title: 'Wybierz dogodny termin',
+    note: 'Troska zaczyna się tutaj',
     demoNote: 'Kalendarz demonstracyjny — godziny są orientacyjne.',
     calendar: {
       prevMonth: 'Poprzedni miesiąc',
@@ -89,6 +89,8 @@ const dict: Dictionary = {
       noSlots: 'Brak dostępnych godzin na ten dzień.',
       chooseDay: 'Wybierz dzień:',
       pastDay: 'niedostępne',
+      availableOn: 'Dostępne godziny na',
+      legendOtherMonth: 'Inny miesiąc',
     },
     form: {
       selectedLabel: 'Wybrana data i godzina',
@@ -100,7 +102,6 @@ const dict: Dictionary = {
       animalLabel: 'Zwierzę',
       animalOptions: { cat: 'Kot', dog: 'Pies', other: 'Inne' },
       reasonLabel: 'Powód wizyty',
-      reasonPlaceholder: 'Krótko opisz powód',
       commLangLabel: 'Preferowany język komunikacji',
       submit: 'Umów wizytę',
       errors: {
@@ -110,6 +111,7 @@ const dict: Dictionary = {
         dateRequired: 'Wybierz datę i godzinę w kalendarzu.',
       },
       demoSuccess: 'To demonstracja. Wizyta nie została utworzona, dane nie zostały wysłane.',
+      demoHint: 'Demo: wizyta nie zostanie utworzona.',
     },
   },
   messengers: {
@@ -117,6 +119,7 @@ const dict: Dictionary = {
     text: 'Napisz do nas przez komunikator — odpowiemy najszybciej, jak to możliwe.',
     whatsapp: 'WhatsApp',
     telegram: 'Telegram',
+    note: 'Pisz, jak Ci wygodnie',
     demoNote: 'Tryb demonstracyjny: kontakty do komunikatorów nie zostały jeszcze skonfigurowane.',
   },
   emergency: {
@@ -144,6 +147,7 @@ const dict: Dictionary = {
   footer: {
     demoBadge: 'Projekt demonstracyjny',
     rights: 'Fikcyjna strona stworzona do portfolio.',
+    tagline: 'Troska dziś — zdrowie jutro',
   },
 };
 
