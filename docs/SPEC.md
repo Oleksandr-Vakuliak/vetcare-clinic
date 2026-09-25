@@ -26,14 +26,16 @@ works on phone/tablet/desktop, accessible by keyboard and screen reader.
 ### In scope
 - Static, single-page site with the eight sections in §5.
 - Four complete languages: **Romanian (primary), Ukrainian, English, Polish**.
-- **Demo** booking calendar + inquiry form (validation only — no submission, no storage).
+- **Demo** booking calendar + inquiry form: a valid request creates a *pending* demo
+  appointment stored **only in this browser** (§12); nothing is sent anywhere.
 - **Demo mode** for contacts: messenger/call actions explain themselves when real
   contacts are not configured.
 - Content edited directly in source files (dictionaries, `site-config.ts`, images).
 - **Demo "Pet account"** at `/[locale]/account` (§10) — browser-only, no real login.
+- **Demo admin panel** at `/[locale]/admin` (§11) — browser-only, open, not a secured system.
 
 ### Out of scope (now)
-- Any backend, database, authentication, or admin panel.
+- Any backend, database, authentication, roles or real (secured) admin system.
 - Real appointment booking / real data submission.
 - Analytics, ads, or third-party trackers.
 - Animation libraries, large component kits, parallax/3D/scroll effects.
@@ -106,15 +108,19 @@ licenses, or credential claims. Profiles marked as demonstration.
 ### 5.5 Booking (demo calendar + form)
 - Calendar opens on the current month; months navigable forward; future dates selectable;
   **past dates disabled**.
-- For a selected date, show demo free/busy hours; busy hours not selectable; selected time
-  clearly highlighted; local demo data only; label "Демокалендар — години умовні".
-- Form fields: name, phone, animal, reason, preferred communication language (defaults to
+- For a selected date, show free/busy 30-minute slots computed from the shared demo model
+  (§12: doctors' hours, breaks, closed slots, existing appointments, clinic time); busy
+  slots not selectable; selected time clearly highlighted; label "Демокалендар — години умовні".
+- Form fields: owner name, phone, pet name, animal, reason, preferred communication language (defaults to
   the site language, changeable). Show the selected date/time near the form (a compact
   line above the submit button). Fields are boxed with an icon; labels stay available to
   screen readers. Layout on wide screens: calendar card · form · handwritten accent.
-- Validate required fields; phone allows international format. On valid submit show
-  "Це демонстрація. Запис не створено, дані не надіслано". **No** data sent or stored; no
-  false confirmation.
+- Validate required fields (owner name, phone, pet name, date/time); phone allows
+  international format. On valid submit a **pending** demo appointment is saved in this
+  browser only (owner name, pet name, species, reason, slot; the phone and communication
+  language are validated but not stored) and the form says so: the request waits for
+  confirmation in the demo admin panel, nothing was sent to the clinic. Nothing is sent
+  over the network; no false confirmation.
 - AC: all of the above verified in the browser.
 
 ### 5.6 Messengers
@@ -206,7 +212,10 @@ keeps the selected pet and tab). Label "Демонстраційний кабі�
 
 **Data & storage.** Seed data in code, generated relative to the first visit (upcoming
 dates stay in the future). The selected pet and tab are stored with the data, so they
-survive a language switch and a reload. Changes live only in `localStorage` (never sent). Notice:
+survive a language switch and a reload. Since the admin panel, data is part of the shared
+model (§12): the next appointment shows its status (pending / confirmed), admin reschedules
+and cancellations appear here, completed appointments appear in the visit history, and a new
+booking starts as pending. Changes live only in `localStorage` (never sent). Notice:
 "Зміни зберігаються лише в цьому браузері. Не вводьте реальні персональні чи медичні
 дані". "Скинути демодані" with confirmation. If storage is unavailable or data is
 invalid, the account works with the seed data. No hydration errors, no flash of another
@@ -220,7 +229,104 @@ language.
   keyboard use; dialogs trap focus, close on Escape and return focus.
 - Unit tests for the data logic and the key scenario; lint, TypeScript and build pass.
 
-## 11. Open questions
+## 11. Admin panel (demo)
+
+**Purpose.** Show a potential client how clinic staff would manage appointments and the
+schedule. Portfolio demo: **no server, no real authorization, no real personal data**. The
+page is open to anyone and is **not** a secured system — there is deliberately no fake
+password or role check.
+
+**Visual reference:** the owner's admin mockup (PNG, "Огляд" screen): left sidebar (brand +
+"Демо адміністратора", four sections, links back to the site / pet account and "Скинути
+демодані" at the bottom), breadcrumb + language menu on top, green banner, page title, cards
+and tables on a light background with green accents. Other sections follow the same style.
+Mockup names, dates and numbers are examples only. No animations.
+
+**Entry & navigation.** `/[locale]/admin` (overview), `/admin/appointments`,
+`/admin/schedule`, `/admin/pets`. Secondary link "Демо для адміністратора" in the site
+footer. Desktop: sidebar; phones: compact top navigation. The site's compact language menu
+keeps the current section. Always visible: "Демонстраційна адмінпанель · Усі дані вигадані".
+Pages are `noindex`.
+
+**Scenarios**
+1. *Overview.* Today in the clinic (clinic date): appointments today (not cancelled),
+   requests waiting for confirmation (all dates), free 30-minute slots left today — all
+   computed from the demo data. Below: appointments table for a day (default today) with
+   search, doctor, status and date; "Додати запис"; doctors' current state (appointment /
+   break / free / not working) with "Відкрити розклад"; quick actions "Додати улюбленця"
+   and "Налаштувати години". No revenue charts, marketing stats or invented metrics.
+2. *Appointments.* List with date & time, pet, fictional owner, doctor, reason, status.
+   Search by pet or owner name; filters by date (or period: upcoming / past / all), doctor,
+   status. Details (incl. change history), create, confirm, reschedule, complete, cancel
+   (with confirmation). Cancelled records stay in the list (history).
+3. *Schedule.* Day or week view for a chosen doctor. Set weekly working hours and a break
+   per weekday; close a single slot for booking and reopen it. If a change would affect
+   existing active appointments, the conflicts are listed and the change is refused until
+   they are rescheduled or cancelled — records are never removed silently.
+4. *Pets.* Searchable list of demo pets; card with photo, name, species, breed, birth date,
+   weight, fictional owner and appointment history. Edit basic data; add a pet (reuses the
+   pet account's form and model). No prescriptions, diagnoses, billing or medical records.
+
+**Status model.** `pending` («Очікує підтвердження») · `confirmed` («Підтверджено») ·
+`completed` («Завершено») · `cancelled` («Скасовано»).
+
+| From | Allowed actions |
+| --- | --- |
+| pending | confirm (only while the start is in the future), reschedule, cancel |
+| confirmed | complete (only once the start time has come), reschedule, cancel |
+| completed, cancelled | none (final) |
+
+Rescheduling keeps the status. Every change is appended to the appointment's history.
+
+**Booking rules** (same for the site form, pet account and admin): required fields; slot on
+the 30-minute grid inside the doctor's hours, outside the break, not closed; not in the past
+(clinic time); no second active (pending or confirmed) appointment for the same doctor and
+slot. Pending requests reserve their slot too. The site form and the pet account pick the
+first free doctor; admin chooses the doctor. Admin-created appointments start as confirmed
+(staff entered them); site/account requests start as pending.
+
+**Done when**
+- RO/UK/EN/PL fully translated (UI, statuses, errors, demo content).
+- End-to-end: visitor books → admin sees pending → confirms → pet account shows it →
+  rescheduling moves the busy slot → cancelling frees it → state survives reload.
+- Schedule conflicts shown and enforced; invalid status actions not offered or rejected.
+- Phone layout without page-wide horizontal overflow (tables become cards); keyboard
+  operable; dialogs trap focus, close on Escape, return focus; no hydration errors.
+- Unit tests: booking conflicts, status transitions, storage + migration; lint, TypeScript,
+  tests and build pass.
+
+**Limitations (v1).** One fixed appointment length for everyone (`SLOT_MINUTES = 30` in
+`src/lib/clinic/config.ts`); one break per weekday; closing works per single slot; demo
+appointments are generated for about two weeks around the first visit, later days are free.
+Data lives in one browser — no sync between devices or people.
+
+**For a real system** (not in this demo): server-side authentication, roles and access
+rights, a shared database with transactions (so two people can't take one slot), audit
+log, notifications to clients, GDPR-compliant handling of personal and medical data.
+
+## 12. Shared demo data (browser storage)
+
+The site calendar, the pet account and the admin panel read and write **one** local model:
+pets (with a fictional owner and an "in pet account" flag), appointments (status, source,
+history; a site request stores only pet name, species and owner name instead of a pet),
+vaccinations, documents, doctors' weekly hours/breaks, closed slots and UI state.
+
+- **Key:** `localStorage["vetcare.demo.v2"]`, `version: 2`. The previous pet-account key
+  `vetcare.petAccount.v1` is **migrated** once (pets, appointments, visits → completed
+  appointments, vaccinations, documents and selection are kept; clinic demo data is added
+  around them) and then removed.
+- **Time zone:** all dates and times are wall-clock times in the clinic's zone,
+  `Europe/Bucharest` ("now" is computed with `Intl`, independent of the visitor's zone).
+- Seed data is relative to the first visit. Invalid stored data → start from the seed with
+  a visible notice (the broken value is kept under `vetcare.demo.v2.backup`). Storage
+  unavailable → works in memory with a notice. Other tabs update through the `storage` event.
+- Notice where data is edited: "Демо: зміни зберігаються лише в цьому браузері й не
+  синхронізуються з іншими пристроями. Не вводьте реальні персональні або медичні дані".
+- "Скинути демодані" (with confirmation) resets the whole model — including demo
+  appointments shown in the pet account and the site calendar. Nothing is ever sent to a
+  server, e-mail or messenger.
+
+## 13. Open questions
 
 - Which browsers/devices to formally test beyond Chromium (Safari/iOS)?
 - Final decision on Polish: include now or keep as backlog?
