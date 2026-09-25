@@ -6,6 +6,7 @@ import type { AccountDictionary } from '@/lib/i18n/account-types';
 import type { Pet, PetFieldError, PetInput, Species } from '@/lib/account/types';
 import { validatePetInput } from '@/lib/account/validate';
 import { toISODate } from '@/lib/account/dates';
+import { clinicToday } from '@/lib/clinic/time';
 
 type PetValue = Extract<ReturnType<typeof validatePetInput>, { ok: true }>['value'];
 
@@ -13,7 +14,9 @@ interface Props {
   d: AccountDictionary;
   /** Current values when editing; undefined when adding a new pet. */
   initial?: { input: PetInput };
-  onSubmit: (value: PetValue) => void;
+  /** The owner's name is only asked in the admin panel. */
+  owner?: { label: string; required: string; initial: string };
+  onSubmit: (value: PetValue, owner: string) => void;
   onCancel: () => void;
 }
 
@@ -29,13 +32,15 @@ export function petToInput(pet: Pet, name: string, breed: string | null): PetInp
   };
 }
 
-export default function PetForm({ d, initial, onSubmit, onCancel }: Props) {
+export default function PetForm({ d, initial, owner, onSubmit, onCancel }: Props) {
   const f = d.form;
   const [input, setInput] = useState<PetInput>(
     initial?.input ?? { name: '', species: '', breed: '', birthDate: '', weight: '' },
   );
   const [errors, setErrors] = useState<Partial<Record<keyof PetInput, PetFieldError>>>({});
-  const today = toISODate(new Date());
+  const [ownerValue, setOwnerValue] = useState(owner?.initial ?? '');
+  const [ownerError, setOwnerError] = useState(false);
+  const today = toISODate(clinicToday());
 
   function set<K extends keyof PetInput>(key: K, value: PetInput[K]) {
     setInput((prev) => ({ ...prev, [key]: value }));
@@ -44,15 +49,17 @@ export default function PetForm({ d, initial, onSubmit, onCancel }: Props) {
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const result = validatePetInput(input, new Date());
-    if (result.ok) {
-      onSubmit(result.value);
+    const result = validatePetInput(input, clinicToday());
+    const ownerMissing = Boolean(owner) && !ownerValue.trim();
+    if (result.ok && !ownerMissing) {
+      onSubmit(result.value, ownerValue.trim());
       return;
     }
-    setErrors(result.errors);
+    setOwnerError(ownerMissing);
+    setErrors(result.ok ? {} : result.errors);
     // Move focus to the first invalid field.
-    const firstInvalid = FIELDS.find((key) => result.errors[key]);
-    if (firstInvalid) document.getElementById(`pf-${firstInvalid}`)?.focus();
+    const firstInvalid = result.ok ? undefined : FIELDS.find((key) => result.errors[key]);
+    document.getElementById(firstInvalid ? `pf-${firstInvalid}` : 'pf-owner')?.focus();
   }
 
   function errorProps(key: keyof PetInput) {
@@ -147,6 +154,30 @@ export default function PetForm({ d, initial, onSubmit, onCancel }: Props) {
           {errorText('weight')}
         </div>
       </div>
+
+      {owner && (
+        <div className="pet-form__field">
+          <label htmlFor="pf-owner">{owner.label}</label>
+          <input
+            id="pf-owner"
+            type="text"
+            maxLength={60}
+            autoComplete="off"
+            value={ownerValue}
+            onChange={(e) => {
+              setOwnerValue(e.target.value);
+              setOwnerError(false);
+            }}
+            aria-required="true"
+            {...(ownerError ? { 'aria-invalid': true as const, 'aria-describedby': 'pf-owner-error' } : {})}
+          />
+          {ownerError && (
+            <span className="field__error" id="pf-owner-error" role="alert">
+              {owner.required}
+            </span>
+          )}
+        </div>
+      )}
 
       {!initial && <p className="pet-form__note">{f.photoNote}</p>}
 
