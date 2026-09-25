@@ -156,6 +156,52 @@ export function GlobeIcon(props: IconProps) {
   );
 }
 
+/* --- Pet account --- */
+
+export function CalendarIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <rect x="4" y="5.5" width="16" height="14.5" rx="2" />
+      <path d="M4 10h16M8.5 3.5v4M15.5 3.5v4" />
+    </svg>
+  );
+}
+
+export function PencilIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M5 19l1-4L15.5 5.5a2.1 2.1 0 0 1 3 3L9 18l-4 1Z" />
+      <path d="M13.5 7.5l3 3" />
+    </svg>
+  );
+}
+
+/** Weight: a kettlebell-like bag. */
+export function WeightIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M9 8.5a3 3 0 1 1 6 0" />
+      <path d="M6.5 8.5h11l1.5 11h-14l1.5-11Z" />
+    </svg>
+  );
+}
+
+export function PlusIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M12 5v14M5 12h14" />
+    </svg>
+  );
+}
+
+export function ArrowUpRightIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M8 16 16 8M9.5 8H16v6.5" />
+    </svg>
+  );
+}
+
 /* --- Service icons --- */
 
 export function StethoscopeIcon(props: IconProps) {
