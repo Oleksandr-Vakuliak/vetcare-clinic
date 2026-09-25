@@ -22,6 +22,8 @@ interface Props {
   selectedTime: string | null;
   onSelectDate: (date: Date) => void;
   onSelectTime: (time: string) => void;
+  /** Extra unavailable slots, e.g. times already taken by demo appointments. */
+  isSlotTaken?: (date: Date, time: string) => boolean;
 }
 
 function subscribeNoop() {
@@ -35,6 +37,7 @@ export default function Calendar({
   selectedTime,
   onSelectDate,
   onSelectTime,
+  isSlotTaken,
 }: Props) {
   const c = dict.booking.calendar;
   // `today` is resolved only on the client (the server snapshot is `false`) so
@@ -54,7 +57,22 @@ export default function Calendar({
   const cells = buildMonthGrid(visible.y, visible.m);
   const weekdays = weekdayShortNames(locale);
   const atCurrentMonth = visible.y === today.getFullYear() && visible.m === today.getMonth();
-  const slots = selectedDate ? getSlotsForDate(selectedDate) : [];
+  // Busy demo slots, slots taken elsewhere, and hours that already passed today.
+  const slots = selectedDate
+    ? getSlotsForDate(selectedDate).map((slot) => {
+        const [h, m] = slot.time.split(':').map(Number);
+        const start = new Date(
+          selectedDate.getFullYear(),
+          selectedDate.getMonth(),
+          selectedDate.getDate(),
+          h,
+          m,
+        );
+        const unavailable =
+          slot.busy || start <= now || Boolean(isSlotTaken?.(selectedDate, slot.time));
+        return { time: slot.time, busy: unavailable };
+      })
+    : [];
 
   function changeMonth(delta: number) {
     setMonthOffset((o) => o + delta);
