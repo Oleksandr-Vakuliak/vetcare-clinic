@@ -46,3 +46,10 @@ Status legend: `Done` (implemented & verified) · `Todo` · `Backlog` (roadmap /
 | ROADMAP-PL | Prepare Polish (PL) language | Backlog | Add locale + `pl.ts`; no component changes |
 | ROADMAP-PHOTOS | Replace demo photos / set real contacts when going live | Backlog | Edit `public/images/` + `site-config.ts` |
 | ROADMAP-BOOKING | Real booking integration (only if a client needs it) | Backlog | Gather requirements first; Calendly/email/backend |
+
+## Maintenance (backlog — noticed in CI logs, not urgent)
+
+| ID | Task | Status | Notes |
+| --- | --- | --- | --- |
+| MAINT-ESLINT | Upgrade ESLint 9 → supported major | Backlog | `npm ci` warns `eslint@9` is no longer supported. Lint still works; upgrade together with `eslint-config-next` and re-check the rules. |
+| MAINT-INSTALL-SCRIPTS | Decide on `unrs-resolver` postinstall script | Backlog | npm warns the package's `postinstall` is not in `allowScripts`, so it is not run. Install, lint and build pass without it. Review before allowing. |
