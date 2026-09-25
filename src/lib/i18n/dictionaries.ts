@@ -1,6 +1,7 @@
 import type { Locale } from './config';
 import type { Dictionary } from './types';
 import type { AccountDictionary } from './account-types';
+import type { AdminDictionary } from './admin-types';
 
 // Dictionaries are dynamically imported so each locale ships only what it needs.
 const loaders: Record<Locale, () => Promise<{ default: Dictionary }>> = {
@@ -25,5 +26,18 @@ const accountLoaders: Record<Locale, () => Promise<{ default: AccountDictionary 
 
 export async function getAccountDictionary(locale: Locale): Promise<AccountDictionary> {
   const load = accountLoaders[locale] ?? accountLoaders.ro;
+  return (await load()).default;
+}
+
+// The demo admin panel has its own texts, loaded only on /[locale]/admin.
+const adminLoaders: Record<Locale, () => Promise<{ default: AdminDictionary }>> = {
+  ro: () => import('./dictionaries/admin/ro'),
+  uk: () => import('./dictionaries/admin/uk'),
+  en: () => import('./dictionaries/admin/en'),
+  pl: () => import('./dictionaries/admin/pl'),
+};
+
+export async function getAdminDictionary(locale: Locale): Promise<AdminDictionary> {
+  const load = adminLoaders[locale] ?? adminLoaders.ro;
   return (await load()).default;
 }
