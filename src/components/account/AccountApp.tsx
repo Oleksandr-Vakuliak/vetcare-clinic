@@ -49,20 +49,21 @@ interface Props {
   locale: Locale;
 }
 
-type Modal =
+// `opener` is the button that opened the dialog; focus returns to it on close.
+type Modal = (
   | { type: 'add' }
   | { type: 'edit' }
   | { type: 'book' }
   | { type: 'visit'; visit: Visit }
   | { type: 'document'; doc: PetDocument }
   | { type: 'reset' }
-  | null;
+) & { opener?: HTMLElement };
 
 const TABS: TabId[] = ['visits', 'vaccines', 'documents'];
 
 export default function AccountApp({ site, d, locale }: Props) {
   const state = useAccountState();
-  const [modal, setModal] = useState<Modal>(null);
+  const [modal, setModal] = useState<Modal | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const tabRefs = useRef<Record<TabId, HTMLButtonElement | null>>({
     visits: null,
@@ -141,7 +142,7 @@ export default function AccountApp({ site, d, locale }: Props) {
             </button>
           );
         })}
-        <button type="button" className="pet-chip pet-chip--add" onClick={() => setModal({ type: 'add' })}>
+        <button type="button" className="pet-chip pet-chip--add" onClick={(e) => setModal({ opener: e.currentTarget, type: 'add' })}>
           <PlusIcon width={22} height={22} />
           {d.pets.add}
         </button>
@@ -184,7 +185,7 @@ export default function AccountApp({ site, d, locale }: Props) {
                 <dd>{fill(d.pets.weight, { value: formatWeight(pet.weightKg, locale) })}</dd>
               </div>
             </dl>
-            <button type="button" className="btn btn--outline profile__edit" onClick={() => setModal({ type: 'edit' })}>
+            <button type="button" className="btn btn--outline profile__edit" onClick={(e) => setModal({ opener: e.currentTarget, type: 'edit' })}>
               <PencilIcon width={18} height={18} /> {d.pets.edit}
             </button>
           </div>
@@ -224,7 +225,7 @@ export default function AccountApp({ site, d, locale }: Props) {
               {notice}
             </p>
           )}
-          <button type="button" className="btn btn--primary btn--block btn--lg" onClick={() => setModal({ type: 'book' })}>
+          <button type="button" className="btn btn--primary btn--block btn--lg" onClick={(e) => setModal({ opener: e.currentTarget, type: 'book' })}>
             {d.appointment.book}
           </button>
         </section>
@@ -277,13 +278,13 @@ export default function AccountApp({ site, d, locale }: Props) {
       {/* Local-only data notice + reset */}
       <div className="account-storage">
         <p>{d.storageNotice}</p>
-        <button type="button" className="btn btn--ghost btn--sm" onClick={() => setModal({ type: 'reset' })}>
+        <button type="button" className="btn btn--ghost btn--sm" onClick={(e) => setModal({ opener: e.currentTarget, type: 'reset' })}>
           {d.reset.button}
         </button>
       </div>
 
       {modal?.type === 'add' && (
-        <Dialog title={d.form.addTitle} closeLabel={d.close} onClose={() => setModal(null)}>
+        <Dialog returnFocus={modal.opener} title={d.form.addTitle} closeLabel={d.close} onClose={() => setModal(null)}>
           <PetForm
             d={d}
             onCancel={() => setModal(null)}
@@ -297,7 +298,7 @@ export default function AccountApp({ site, d, locale }: Props) {
       )}
 
       {modal?.type === 'edit' && (
-        <Dialog title={d.form.editTitle} closeLabel={d.close} onClose={() => setModal(null)}>
+        <Dialog returnFocus={modal.opener} title={d.form.editTitle} closeLabel={d.close} onClose={() => setModal(null)}>
           <PetForm
             d={d}
             initial={{ input: petToInput(pet, name, breed) }}
@@ -312,6 +313,7 @@ export default function AccountApp({ site, d, locale }: Props) {
 
       {modal?.type === 'book' && (
         <BookingDialog
+          returnFocus={modal.opener}
           site={site}
           d={d}
           locale={locale}
@@ -328,7 +330,7 @@ export default function AccountApp({ site, d, locale }: Props) {
       )}
 
       {modal?.type === 'visit' && (
-        <Dialog title={d.visits.detailsTitle} closeLabel={d.close} onClose={() => setModal(null)}>
+        <Dialog returnFocus={modal.opener} title={d.visits.detailsTitle} closeLabel={d.close} onClose={() => setModal(null)}>
           <dl className="details">
             <dt>{d.visits.dateLabel}</dt>
             <dd>{formatDate(modal.visit.date, locale)}</dd>
@@ -344,7 +346,7 @@ export default function AccountApp({ site, d, locale }: Props) {
       )}
 
       {modal?.type === 'document' && (
-        <Dialog title={docTitle(modal.doc)} closeLabel={d.close} onClose={() => setModal(null)}>
+        <Dialog returnFocus={modal.opener} title={docTitle(modal.doc)} closeLabel={d.close} onClose={() => setModal(null)}>
           <p className="doc-meta">
             <span className="demo-tag">{d.documents.demoBadge}</span> {formatDate(modal.doc.date, locale)}
           </p>
@@ -357,7 +359,7 @@ export default function AccountApp({ site, d, locale }: Props) {
       )}
 
       {modal?.type === 'reset' && (
-        <Dialog title={d.reset.title} closeLabel={d.close} onClose={() => setModal(null)}>
+        <Dialog returnFocus={modal.opener} title={d.reset.title} closeLabel={d.close} onClose={() => setModal(null)}>
           <p>{d.reset.text}</p>
           <div className="dialog-actions">
             <button type="button" className="btn btn--ghost" onClick={() => setModal(null)}>
@@ -414,7 +416,7 @@ export default function AccountApp({ site, d, locale }: Props) {
                   type="button"
                   className="record-row"
                   aria-label={fill(d.visits.open, { date: formatDate(visit.date, locale) })}
-                  onClick={() => setModal({ type: 'visit', visit })}
+                  onClick={(e) => setModal({ opener: e.currentTarget, type: 'visit', visit })}
                 >
                   <span className="record-row__date">{formatDate(visit.date, locale)}</span>
                   <span>{reason(visit.reasonKey)}</span>
@@ -487,7 +489,7 @@ export default function AccountApp({ site, d, locale }: Props) {
                   <button
                     type="button"
                     className="btn btn--ghost btn--sm"
-                    onClick={() => setModal({ type: 'document', doc })}
+                    onClick={(e) => setModal({ opener: e.currentTarget, type: 'document', doc })}
                   >
                     {d.documents.view}
                   </button>
