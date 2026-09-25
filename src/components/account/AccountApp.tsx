@@ -5,9 +5,12 @@ import type { KeyboardEvent } from 'react';
 import type { Dictionary } from '@/lib/i18n/types';
 import type { AccountDictionary } from '@/lib/i18n/account-types';
 import type { Locale } from '@/lib/i18n/config';
-import type { PetDocument, TabId, Visit } from '@/lib/account/types';
+import type { Appointment, PetDocument, TabId } from '@/lib/clinic/types';
+import { clinicNow } from '@/lib/clinic/time';
 import {
+  accountPets,
   addPet,
+  cancelledUpcoming,
   documentsFor,
   nextAppointment,
   nextVaccination,
@@ -28,8 +31,9 @@ import {
   UserIcon,
   WeightIcon,
 } from '../icons';
-import { newId, resetAccount, updateAccount, useAccountState } from './store';
+import { newId, resetDemo, updateDemo, useDemoSnapshot } from '../demo-store';
 import {
+  doctorName,
   fill,
   formatAge,
   formatDate,
@@ -37,6 +41,8 @@ import {
   formatWeight,
   petBreed,
   petName,
+  reasonText,
+  statusLabel,
 } from './format';
 import Dialog from './Dialog';
 import PetForm, { petToInput } from './PetForm';
@@ -54,7 +60,7 @@ type Modal = (
   | { type: 'add' }
   | { type: 'edit' }
   | { type: 'book' }
-  | { type: 'visit'; visit: Visit }
+  | { type: 'visit'; visit: Appointment }
   | { type: 'document'; doc: PetDocument }
   | { type: 'reset' }
 ) & { opener?: HTMLElement };
@@ -62,7 +68,8 @@ type Modal = (
 const TABS: TabId[] = ['visits', 'vaccines', 'documents'];
 
 export default function AccountApp({ site, d, locale }: Props) {
-  const state = useAccountState();
+  const snapshot = useDemoSnapshot();
+  const state = snapshot?.state ?? null;
   const [modal, setModal] = useState<Modal | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const tabRefs = useRef<Record<TabId, HTMLButtonElement | null>>({
@@ -81,7 +88,8 @@ export default function AccountApp({ site, d, locale }: Props) {
     );
   }
 
-  const pet = petById(state, state.ui.petId) ?? state.pets[0];
+  const pets = accountPets(state);
+  const pet = petById(state, state.ui.petId) ?? pets[0];
   const name = petName(pet, d);
   const breed = petBreed(pet, d);
   // A pet without any records (e.g. just added): empty states explain why.
@@ -89,18 +97,25 @@ export default function AccountApp({ site, d, locale }: Props) {
   const vaccinations = vaccinationsFor(state, pet.id);
   const documents = documentsFor(state, pet.id);
   const isNewPet = visits.length === 0 && vaccinations.length === 0 && documents.length === 0;
-  const now = new Date();
+  const now = clinicNow();
   const appointment = nextAppointment(state, pet.id, now);
+  const cancelled = cancelledUpcoming(state, pet.id, now);
+  const dataNotice =
+    snapshot && !snapshot.saved
+      ? d.dataNotice.notSaved
+      : snapshot && snapshot.source !== 'stored' && snapshot.source !== 'seed'
+        ? d.dataNotice[snapshot.source]
+        : null;
   const vaccine = nextVaccination(state, pet.id, now);
   const tab = state.ui.tab;
 
   function choosePet(id: string) {
     setNotice(null);
-    updateAccount((s) => selectPet(s, id));
+    updateDemo((s) => selectPet(s, id));
   }
 
   function chooseTab(next: TabId, focus = false) {
-    updateAccount((s) => selectTab(s, next));
+    updateDemo((s) => selectTab(s, next));
     if (focus) tabRefs.current[next]?.focus();
   }
 
@@ -127,7 +142,7 @@ export default function AccountApp({ site, d, locale }: Props) {
     <>
       {/* Pet switcher */}
       <div className="pet-switcher" role="group" aria-label={d.pets.switcherLabel}>
-        {state.pets.map((item) => {
+        {pets.map((item) => {
           const itemName = petName(item, d);
           return (
             <button
@@ -204,21 +219,30 @@ export default function AccountApp({ site, d, locale }: Props) {
               <p className="appointment__when">
                 {formatDayMonth(appointment.date, locale)} · {appointment.time}
               </p>
-              <p className="appointment__reason">
-                {d.records.reasons[appointment.reasonKey as keyof typeof d.records.reasons] ??
-                  appointment.reasonKey}
-              </p>
+              <p className="appointment__reason">{reasonText(appointment.reason, d)}</p>
               <p className="appointment__doctor">
                 <UserIcon width={22} height={22} />
-                {fill(d.appointment.doctor, {
-                  name:
-                    d.records.doctors[appointment.doctorKey as keyof typeof d.records.doctors] ??
-                    appointment.doctorKey,
-                })}
+                {fill(d.appointment.doctor, { name: doctorName(appointment.doctorId, d) })}
+              </p>
+              <p>
+                <span className={`status-badge status-badge--${appointment.status}`}>
+                  {statusLabel(appointment.status, d)}
+                </span>
               </p>
             </div>
           ) : (
             <p className="appointment__empty">{d.appointment.empty}</p>
+          )}
+          {cancelled.length > 0 && (
+            <ul className="appointment__cancelled">
+              {cancelled.map((a) => (
+                <li key={a.id}>
+                  <span className="status-badge status-badge--cancelled">
+                    {fill(d.appointment.cancelled, { when: `${formatDayMonth(a.date, locale)} · ${a.time}` })}
+                  </span>
+                </li>
+              ))}
+            </ul>
           )}
           {notice && (
             <p className="account-notice" role="status">
@@ -278,6 +302,11 @@ export default function AccountApp({ site, d, locale }: Props) {
       {/* Local-only data notice + reset */}
       <div className="account-storage">
         <p>{d.storageNotice}</p>
+        {dataNotice && (
+          <p className="account-notice" role="status">
+            {dataNotice}
+          </p>
+        )}
         <button type="button" className="btn btn--ghost btn--sm" onClick={(e) => setModal({ opener: e.currentTarget, type: 'reset' })}>
           {d.reset.button}
         </button>
@@ -289,7 +318,7 @@ export default function AccountApp({ site, d, locale }: Props) {
             d={d}
             onCancel={() => setModal(null)}
             onSubmit={(value) => {
-              updateAccount((s) => addPet(s, value, newId('pet')));
+              updateDemo((s) => addPet(s, value, newId('pet')));
               setNotice(null);
               setModal(null);
             }}
@@ -304,7 +333,7 @@ export default function AccountApp({ site, d, locale }: Props) {
             initial={{ input: petToInput(pet, name, breed) }}
             onCancel={() => setModal(null)}
             onSubmit={(value) => {
-              updateAccount((s) => updatePet(s, pet.id, value));
+              updateDemo((s) => updatePet(s, pet.id, value));
               setModal(null);
             }}
           />
@@ -322,7 +351,7 @@ export default function AccountApp({ site, d, locale }: Props) {
           petName={name}
           onClose={() => setModal(null)}
           onBooked={(next) => {
-            updateAccount(() => next);
+            updateDemo(() => next);
             setNotice(d.appointment.added);
             setModal(null);
           }}
@@ -335,11 +364,11 @@ export default function AccountApp({ site, d, locale }: Props) {
             <dt>{d.visits.dateLabel}</dt>
             <dd>{formatDate(modal.visit.date, locale)}</dd>
             <dt>{d.visits.reasonLabel}</dt>
-            <dd>{reason(modal.visit.reasonKey)}</dd>
+            <dd>{reasonText(modal.visit.reason, d)}</dd>
             <dt>{d.visits.doctorLabel}</dt>
-            <dd>{doctor(modal.visit.doctorKey)}</dd>
+            <dd>{doctorName(modal.visit.doctorId, d)}</dd>
             <dt>{d.visits.noteLabel}</dt>
-            <dd>{d.records.notes[modal.visit.noteKey as keyof typeof d.records.notes] ?? '—'}</dd>
+            <dd>{(modal.visit.noteKey && d.records.notes[modal.visit.noteKey as keyof typeof d.records.notes]) || '—'}</dd>
           </dl>
           <p className="demo-hint">{d.visits.demoNote}</p>
         </Dialog>
@@ -369,7 +398,7 @@ export default function AccountApp({ site, d, locale }: Props) {
               type="button"
               className="btn btn--danger"
               onClick={() => {
-                resetAccount();
+                resetDemo();
                 setNotice(d.reset.done);
                 setModal(null);
               }}
@@ -384,12 +413,6 @@ export default function AccountApp({ site, d, locale }: Props) {
 
   // --- helpers (closures over the current state and dictionary) ---
 
-  function reason(key: string) {
-    return d.records.reasons[key as keyof typeof d.records.reasons] ?? key;
-  }
-  function doctor(key: string) {
-    return d.records.doctors[key as keyof typeof d.records.doctors] ?? key;
-  }
   function docTitle(doc: PetDocument) {
     return d.records.documents[doc.titleKey as 'afterCheckup' | 'vaccineNote' | 'careTips'] ?? doc.titleKey;
   }
@@ -419,8 +442,8 @@ export default function AccountApp({ site, d, locale }: Props) {
                   onClick={(e) => setModal({ opener: e.currentTarget, type: 'visit', visit })}
                 >
                   <span className="record-row__date">{formatDate(visit.date, locale)}</span>
-                  <span>{reason(visit.reasonKey)}</span>
-                  <span className="record-row__muted">{doctor(visit.doctorKey)}</span>
+                  <span>{reasonText(visit.reason, d)}</span>
+                  <span className="record-row__muted">{doctorName(visit.doctorId, d)}</span>
                   <ChevronRightIcon width={20} height={20} className="record-row__chevron" />
                 </button>
               </li>

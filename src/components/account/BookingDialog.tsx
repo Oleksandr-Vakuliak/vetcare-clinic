@@ -4,28 +4,31 @@ import { useState } from 'react';
 import type { Dictionary } from '@/lib/i18n/types';
 import type { AccountDictionary } from '@/lib/i18n/account-types';
 import type { Locale } from '@/lib/i18n/config';
-import type { AccountState } from '@/lib/account/types';
-import { addAppointment, isSlotTaken } from '@/lib/account/state';
+import type { DemoState } from '@/lib/clinic/types';
+import { createAppointment } from '@/lib/clinic/appointments';
+import { publicSlots } from '@/lib/clinic/schedule';
+import { clinicNow } from '@/lib/clinic/time';
 import { toISODate } from '@/lib/account/dates';
 import Calendar from '../Calendar';
 import Dialog from './Dialog';
 import { fill } from './format';
-import { newId } from './store';
+import { newId } from '../demo-store';
 
 interface Props {
   site: Dictionary;
   d: AccountDictionary;
   locale: Locale;
-  state: AccountState;
+  state: DemoState;
   petId: string;
   petName: string;
-  onBooked: (next: AccountState) => void;
+  onBooked: (next: DemoState) => void;
   onClose: () => void;
   returnFocus?: HTMLElement;
 }
 
-// Reuses the site's demo calendar. Past times, busy demo slots and slots that
-// already have a demo appointment can't be chosen; addAppointment re-checks it.
+// Reuses the site's demo calendar on the shared model: booked (also pending), closed
+// and past slots can't be chosen; createAppointment re-checks and picks a free doctor.
+// The request starts as "pending" until the demo admin confirms it.
 export default function BookingDialog({
   site,
   d,
@@ -46,14 +49,23 @@ export default function BookingDialog({
       setError(d.booking.chooseSlot);
       return;
     }
-    const result = addAppointment(
+    const result = createAppointment(
       state,
-      { petId, date: toISODate(date), time },
-      new Date(),
+      { petId, guest: null, date: toISODate(date), time, doctorId: null, reason: { key: 'visit' }, source: 'account' },
+      clinicNow(),
       newId('appt'),
     );
     if (!result.ok) {
-      setError(result.reason === 'unknownPet' ? d.booking.errors.invalid : d.booking.errors[result.reason]);
+      const e = result.error;
+      setError(
+        e === 'past'
+          ? d.booking.errors.past
+          : e === 'taken'
+            ? d.booking.errors.taken
+            : e === 'offHours' || e === 'closed' || e === 'noDoctor'
+              ? d.booking.errors.busy
+              : d.booking.errors.invalid,
+      );
       setTime(null);
       return;
     }
@@ -77,7 +89,7 @@ export default function BookingDialog({
           setTime(value);
           setError(null);
         }}
-        isSlotTaken={(day, slot) => isSlotTaken(state, toISODate(day), slot)}
+        getSlots={(iso) => publicSlots(state, iso, clinicNow())}
       />
       {error && (
         <p className="field__error" role="alert">
