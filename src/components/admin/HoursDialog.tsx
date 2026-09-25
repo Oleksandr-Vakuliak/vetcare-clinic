@@ -5,7 +5,7 @@ import type { FormEvent } from 'react';
 import type { Appointment, DayHours, DemoState } from '@/lib/clinic/types';
 import { DOCTORS, SLOT_MINUTES } from '@/lib/clinic/config';
 import { editorTimes, setDoctorWeek } from '@/lib/clinic/schedule';
-import type { DayHoursError } from '@/lib/clinic/schedule';
+import type { DayHoursError, WeekResult } from '@/lib/clinic/schedule';
 import { clinicNow } from '@/lib/clinic/time';
 import Dialog from '../account/Dialog';
 import { appointmentPet, doctorName, fill } from '../account/format';
@@ -79,13 +79,20 @@ export default function HoursDialog({ state, doctorId: initialDoctor, returnFocu
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const result = setDoctorWeek(state, doctorId, toWeek(rows), clinicNow());
-    if (!result.ok) {
-      if (result.reason === 'invalid') setErrors(result.errors);
-      else setConflicts(result.conflicts);
+    // Checked against the latest data (another tab may have added appointments meanwhile).
+    let refused: WeekResult | null = null;
+    updateDemo((latest) => {
+      const result = setDoctorWeek(latest, doctorId, toWeek(rows), clinicNow());
+      if (result.ok) return result.state;
+      refused = result;
+      return latest;
+    });
+    const failure = refused as WeekResult | null;
+    if (failure && !failure.ok) {
+      if (failure.reason === 'invalid') setErrors(failure.errors);
+      else setConflicts(failure.conflicts);
       return;
     }
-    updateDemo(() => result.state);
     notify(a.notices.hoursSaved);
     onClose();
   }
