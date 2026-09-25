@@ -4,7 +4,7 @@
 
 A single-page website for a **fictional** veterinary clinic, built as a portfolio
 piece. It ships four complete language versions and a demo booking experience —
-with **no backend, database, or data storage**.
+with **no backend or database** (the demo pet account keeps changes only in your browser).
 
 **Live demo:** https://vetcare-clinic-pi.vercel.app
 
@@ -28,6 +28,25 @@ UI or animation libraries.
 - Calm light theme with green accents; red is reserved for urgent help. Responsive
   for phone, tablet, and desktop.
 
+## Pet account (demo)
+
+Open **/[locale]/account** (e.g. `/uk/account`) or the "Кабінет улюбленця" link in the
+site header — no login. It shows how a clinic's client area could look, focused on the
+animal: two demo pets (cat, dog), profile with age from the birth date, next appointment
+(booking reuses the site's demo calendar), vaccination reminder, visit history,
+vaccinations and demo documents; add / edit a pet.
+
+- **No real authorization, backend or medical system.** All records are fictional; demo
+  documents are not medical reports or official papers.
+- **Demo data:** seed in `src/lib/account/seed.ts` (dates are relative to the first visit,
+  so upcoming items stay in the future); texts per language in
+  `src/lib/i18n/dictionaries/account/`.
+- **Storage:** changes are saved only in the browser's `localStorage`
+  (key `vetcare.petAccount.v1`) and never sent anywhere. If storage is unavailable or the
+  data is invalid, the account falls back to the seed. **"Скинути демодані"** (with
+  confirmation) clears it.
+- Details and acceptance criteria: [`docs/SPEC.md` §10](docs/SPEC.md).
+
 ## Getting started
 
 ```bash
@@ -42,9 +61,10 @@ npm run build
 npm run start
 ```
 
-Type check: `npx tsc --noEmit` · Lint: `npm run lint`
+Type check: `npx tsc --noEmit` · Lint: `npm run lint` · Tests: `npm test` (account data logic,
+Node's built-in test runner — no extra dependencies)
 
-The same checks (lint → type check → build) run in GitHub Actions on every pull request
+The same checks (lint → type check → tests → build) run in GitHub Actions on every pull request
 and every push to `main` — see `.github/workflows/ci.yml`.
 
 Deployed on Vercel: https://vetcare-clinic-pi.vercel.app (auto-deploys from `main`).
@@ -73,10 +93,12 @@ label in `src/app/[lang]/layout.tsx` (TypeScript flags it). Components stay unch
 
 ```
 src/
-  app/[lang]/         # locale segment: layout (header, footer) + page (sections)
+  app/[lang]/         # locale segment: layout + page (sections); account/ = pet account
   proxy.ts            # redirect / -> /ro
   components/         # sections and interactive parts (calendar, form, modal)
-  lib/i18n/           # locale config, Dictionary type, dictionaries
+  components/account/ # pet account UI, dialogs, localStorage store
+  lib/i18n/           # locale config, Dictionary types, dictionaries (+ account/)
+  lib/account/        # pet account data: types, seed, validation, storage (+ tests)
   lib/site-config.ts  # contacts (demo mode)
   lib/booking-data.ts # demo calendar slots
   lib/dates.ts        # locale-aware date formatting (Intl)
