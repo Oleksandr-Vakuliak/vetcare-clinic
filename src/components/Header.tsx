@@ -65,6 +65,10 @@ export default function Header({ dict, locale }: Props) {
           </div>
         </div>
 
+        <div className="header__lang-mobile">
+          <LanguageSwitcher current={locale} label={dict.header.languageLabel} />
+        </div>
+
         <button
           type="button"
           className="menu-toggle"
@@ -90,11 +94,6 @@ export default function Header({ dict, locale }: Props) {
                 {dict.nav.emergency}
               </a>
             </nav>
-            <LanguageSwitcher
-              current={locale}
-              label={dict.header.languageLabel}
-              onNavigate={() => setOpen(false)}
-            />
             <a href="#booking" className="btn btn--primary btn--block" onClick={() => setOpen(false)}>
               {dict.hero.ctaBooking}
             </a>

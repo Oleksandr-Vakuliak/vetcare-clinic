@@ -22,7 +22,7 @@ export interface LocaleMeta {
 
 export const localeMeta: Record<Locale, LocaleMeta> = {
   ro: { label: 'RO', endonym: 'Română', htmlLang: 'ro', intl: 'ro-RO' },
-  uk: { label: 'UK', endonym: 'Українська', htmlLang: 'uk', intl: 'uk-UA' },
+  uk: { label: 'UA', endonym: 'Українська', htmlLang: 'uk', intl: 'uk-UA' },
   en: { label: 'EN', endonym: 'English', htmlLang: 'en', intl: 'en-GB' },
   pl: { label: 'PL', endonym: 'Polski', htmlLang: 'pl', intl: 'pl-PL' },
 };

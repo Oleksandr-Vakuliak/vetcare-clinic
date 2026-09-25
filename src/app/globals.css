@@ -301,26 +301,82 @@ button {
 }
 
 /* Language switcher */
-.lang-switch {
+.lang-menu {
+  position: relative;
+}
+.lang-menu__trigger {
   display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  height: 40px;
+  padding: 0 0.75rem;
   border: 1px solid var(--color-border);
-  border-radius: 999px;
-  overflow: hidden;
+  border-radius: var(--radius-sm);
   background: var(--color-surface);
-}
-.lang-switch a {
-  padding: 0.35rem 0.7rem;
-  font-size: 0.85rem;
+  color: var(--color-text);
   font-weight: 600;
-  color: var(--color-muted);
+  font-size: 0.9rem;
 }
-.lang-switch a[aria-current='true'] {
-  background: var(--color-green);
-  color: #fff;
+.lang-menu__trigger:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
 }
-.lang-switch a:hover:not([aria-current='true']) {
+.lang-menu__chevron {
+  flex-shrink: 0;
+}
+.lang-menu__trigger[aria-expanded='true'] .lang-menu__chevron {
+  transform: rotate(180deg);
+}
+.lang-menu__list {
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  right: 0;
+  z-index: 60;
+  min-width: 11rem;
+  max-width: calc(100vw - 2rem);
+  margin: 0;
+  padding: 0.35rem;
+  list-style: none;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+}
+.lang-menu__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: 44px;
+  padding: 0.6rem 0.9rem;
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  font-weight: 500;
+}
+.lang-menu__item:hover,
+.lang-menu__item:focus-visible {
   background: var(--color-green-soft);
+}
+.lang-menu__item:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -2px;
+}
+.lang-menu__item[aria-current='true'] {
   color: var(--color-green-dark);
+  font-weight: 600;
+}
+.lang-menu__check {
+  flex-shrink: 0;
+}
+
+.header__lang-mobile {
+  margin-left: auto;
+  margin-right: 0.5rem;
+}
+@media (min-width: 960px) {
+  .header__lang-mobile {
+    display: none;
+  }
 }
 
 .menu-toggle {
