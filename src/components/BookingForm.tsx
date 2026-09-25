@@ -5,6 +5,10 @@ import type { FormEvent } from 'react';
 import type { Dictionary } from '@/lib/i18n/types';
 import { locales, localeMeta, type Locale } from '@/lib/i18n/config';
 import { formatFullDate } from '@/lib/dates';
+import { toISODate } from '@/lib/account/dates';
+import { createAppointment } from '@/lib/clinic/appointments';
+import { clinicNow } from '@/lib/clinic/time';
+import { newId, updateDemo } from './demo-store';
 import { ChevronDownIcon, GlobeIcon, NoteIcon, PawIcon, PhoneIcon, UserIcon } from './icons';
 
 interface Props {
@@ -12,6 +16,8 @@ interface Props {
   locale: Locale;
   selectedDate: Date | null;
   selectedTime: string | null;
+  /** Called after a demo request was saved (the slot is now reserved). */
+  onBooked: () => void;
 }
 
 type AnimalValue = 'cat' | 'dog' | 'other';
@@ -19,6 +25,7 @@ type AnimalValue = 'cat' | 'dog' | 'other';
 interface Errors {
   name?: string;
   phone?: string;
+  petName?: string;
   date?: string;
 }
 
@@ -29,11 +36,12 @@ function isValidPhone(value: string): boolean {
   return digits.length >= 7 && digits.length <= 15;
 }
 
-export default function BookingForm({ dict, locale, selectedDate, selectedTime }: Props) {
+export default function BookingForm({ dict, locale, selectedDate, selectedTime, onBooked }: Props) {
   const f = dict.booking.form;
 
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
+  const [petName, setPetName] = useState('');
   const [animal, setAnimal] = useState<AnimalValue>('cat');
   const [reason, setReason] = useState('');
   const [commLang, setCommLang] = useState<Locale>(locale);
@@ -53,6 +61,7 @@ export default function BookingForm({ dict, locale, selectedDate, selectedTime }
     if (!name.trim()) e.name = f.errors.nameRequired;
     if (!phone.trim()) e.phone = f.errors.phoneRequired;
     else if (!isValidPhone(phone)) e.phone = f.errors.phoneInvalid;
+    if (!petName.trim()) e.petName = f.errors.petNameRequired;
     if (!selectedDate || !selectedTime) e.date = f.errors.dateRequired;
     return e;
   }
@@ -60,9 +69,46 @@ export default function BookingForm({ dict, locale, selectedDate, selectedTime }
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const found = validate();
-    setErrors(found);
-    // No network request, no storage — this is a demo only.
-    setShowSuccess(Object.keys(found).length === 0);
+    if (Object.keys(found).length > 0 || !selectedDate || !selectedTime) {
+      setErrors(found);
+      setShowSuccess(false);
+      return;
+    }
+    // Demo only: the request is saved in this browser (shared demo model) and waits
+    // for confirmation in the demo admin panel. The phone and the preferred language
+    // are validated but not stored; nothing is sent over the network.
+    let saved = false;
+    updateDemo((state) => {
+      const result = createAppointment(
+        state,
+        {
+          petId: null,
+          guest: { petName, species: animal, ownerName: name },
+          date: toISODate(selectedDate),
+          time: selectedTime,
+          doctorId: null,
+          reason: reason.trim() ? { text: reason.trim() } : { key: 'visit' },
+          source: 'site',
+        },
+        clinicNow(),
+        newId('site'),
+      );
+      saved = result.ok;
+      return result.ok ? result.state : state;
+    });
+    if (!saved) {
+      setErrors({ date: f.errors.slotUnavailable });
+      setShowSuccess(false);
+      onBooked();
+      return;
+    }
+    setErrors({});
+    setName('');
+    setPhone('');
+    setPetName('');
+    setReason('');
+    setShowSuccess(true);
+    onBooked();
   }
 
   const selectionText =
@@ -127,6 +173,33 @@ export default function BookingForm({ dict, locale, selectedDate, selectedTime }
         {errors.phone && (
           <span className="field__error" id="bf-phone-error" role="alert">
             {errors.phone}
+          </span>
+        )}
+      </div>
+
+      <div className="field">
+        <label htmlFor="bf-pet" className="visually-hidden">
+          {f.petNameLabel}
+        </label>
+        <div className="field__box">
+          <PawIcon className="field__icon" width={20} height={20} />
+          <input
+            id="bf-pet"
+            type="text"
+            maxLength={40}
+            value={petName}
+            onChange={(e) => dirty(setPetName)(e.target.value)}
+            placeholder={f.petNamePlaceholder}
+            autoComplete="off"
+            required
+            aria-required="true"
+            aria-invalid={errors.petName ? 'true' : undefined}
+            aria-describedby={errors.petName ? 'bf-pet-error' : undefined}
+          />
+        </div>
+        {errors.petName && (
+          <span className="field__error" id="bf-pet-error" role="alert">
+            {errors.petName}
           </span>
         )}
       </div>

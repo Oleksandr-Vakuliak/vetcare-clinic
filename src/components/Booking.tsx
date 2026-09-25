@@ -5,6 +5,9 @@ import type { Dictionary } from '@/lib/i18n/types';
 import type { Locale } from '@/lib/i18n/config';
 import Calendar from './Calendar';
 import BookingForm from './BookingForm';
+import { useDemoState } from './demo-store';
+import { publicSlots } from '@/lib/clinic/schedule';
+import { clinicNow } from '@/lib/clinic/time';
 import { HeartIcon, PawIcon } from './icons';
 
 interface Props {
@@ -15,6 +18,8 @@ interface Props {
 export default function Booking({ dict, locale }: Props) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  // Shared demo model: slots taken in the pet account or the admin panel are busy here too.
+  const state = useDemoState();
 
   function handleSelectDate(date: Date) {
     setSelectedDate(date);
@@ -30,12 +35,14 @@ export default function Booking({ dict, locale }: Props) {
         selectedTime={selectedTime}
         onSelectDate={handleSelectDate}
         onSelectTime={setSelectedTime}
+        getSlots={(iso) => (state ? publicSlots(state, iso, clinicNow()) : [])}
       />
       <BookingForm
         dict={dict}
         locale={locale}
         selectedDate={selectedDate}
         selectedTime={selectedTime}
+        onBooked={() => setSelectedTime(null)}
       />
       <p className="handnote booking__note">
         <span className="booking__note-icons" aria-hidden="true">

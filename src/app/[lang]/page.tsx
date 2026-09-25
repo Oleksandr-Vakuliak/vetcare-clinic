@@ -40,7 +40,7 @@ export default async function Page({ params }: Props) {
         <Messengers dict={dict} />
         <EmergencySection dict={dict} />
       </main>
-      <Footer dict={dict} />
+      <Footer dict={dict} locale={lang} />
       <EmergencyFab dict={dict} />
     </>
   );

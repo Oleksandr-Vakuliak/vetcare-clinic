@@ -100,6 +100,8 @@ const dict: Dictionary = {
       namePlaceholder: "Your name",
       phoneLabel: "Phone",
       phonePlaceholder: "+40 700 000 000",
+      petNameLabel: "Pet’s name",
+      petNamePlaceholder: "Your pet’s name",
       animalLabel: "Animal",
       animalOptions: { cat: "Cat", dog: "Dog", other: "Other" },
       reasonLabel: "Reason for visit",
@@ -110,9 +112,13 @@ const dict: Dictionary = {
         phoneRequired: "Please enter your phone number.",
         phoneInvalid: "Enter a valid phone number.",
         dateRequired: "Please select a date and time in the calendar.",
+        petNameRequired: "Please enter your pet’s name.",
+        slotUnavailable: "This time has just become unavailable. Please choose another.",
       },
-      demoSuccess: "This is a demonstration. No appointment was created and no data was submitted.",
-      demoHint: "Demo: no appointment will be created.",
+      demoSuccess:
+        "Demo appointment created in this browser only. It is waiting for confirmation in the demo admin panel. Nothing was sent to anyone.",
+      demoHint:
+        "Demo: the request is saved only in this browser; the phone number is not stored or sent anywhere.",
     },
   },
   messengers: {
@@ -148,6 +154,7 @@ const dict: Dictionary = {
   footer: {
     demoBadge: "Demo project",
     rights: "Fictional website created for portfolio.",
+    adminLink: "Admin demo",
     tagline: "Care today — health tomorrow",
   },
 };

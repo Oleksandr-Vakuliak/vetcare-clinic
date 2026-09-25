@@ -100,6 +100,8 @@ const dict: Dictionary = {
       namePlaceholder: "Numele dvs.",
       phoneLabel: "Telefon",
       phonePlaceholder: "+40 700 000 000",
+      petNameLabel: "Numele animalului",
+      petNamePlaceholder: "Numele animalului de companie",
       animalLabel: "Animal",
       animalOptions: { cat: "Pisică", dog: "Câine", other: "Altul" },
       reasonLabel: "Motivul vizitei",
@@ -110,9 +112,13 @@ const dict: Dictionary = {
         phoneRequired: "Vă rugăm să introduceți numărul de telefon.",
         phoneInvalid: "Introduceți un număr de telefon valid.",
         dateRequired: "Selectați data și ora din calendar.",
+        petNameRequired: "Vă rugăm să introduceți numele animalului.",
+        slotUnavailable: "Această oră tocmai a devenit indisponibilă. Alegeți alta.",
       },
-      demoSuccess: "Aceasta este o demonstrație. Programarea nu a fost creată, datele nu au fost trimise.",
-      demoHint: "Demo: programarea nu va fi creată.",
+      demoSuccess:
+        "Programare demo creată doar în acest browser. Așteaptă confirmarea în panoul de administrare demo. Nu s-a trimis nimic nimănui.",
+      demoHint:
+        "Demo: cererea se salvează doar în acest browser; numărul de telefon nu se salvează și nu se trimite nicăieri.",
     },
   },
   messengers: {
@@ -148,6 +154,7 @@ const dict: Dictionary = {
   footer: {
     demoBadge: "Proiect demonstrativ",
     rights: "Site fictiv creat pentru portofoliu.",
+    adminLink: "Demo pentru administrator",
     tagline: "Grijă azi — sănătate mâine",
   },
 };

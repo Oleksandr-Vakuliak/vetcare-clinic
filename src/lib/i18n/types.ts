@@ -72,6 +72,8 @@ export interface Dictionary {
       namePlaceholder: string;
       phoneLabel: string;
       phonePlaceholder: string;
+      petNameLabel: string;
+      petNamePlaceholder: string;
       animalLabel: string;
       animalOptions: { cat: string; dog: string; other: string };
       reasonLabel: string;
@@ -82,6 +84,9 @@ export interface Dictionary {
         phoneRequired: string;
         phoneInvalid: string;
         dateRequired: string;
+        petNameRequired: string;
+        /** The chosen slot was taken meanwhile (e.g. in another tab). */
+        slotUnavailable: string;
       };
       demoSuccess: string;
       /** Small note under the submit button. */
@@ -122,6 +127,8 @@ export interface Dictionary {
   footer: {
     demoBadge: string;
     rights: string;
+    /** Secondary footer link to the demo admin panel (/[locale]/admin). */
+    adminLink: string;
     tagline: string;
   };
 }

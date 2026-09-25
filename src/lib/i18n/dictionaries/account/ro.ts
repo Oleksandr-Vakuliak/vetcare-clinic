@@ -8,7 +8,15 @@ const account: AccountDictionary = {
   demoLabel: 'Cont demonstrativ · Toate datele sunt fictive',
   footerMotto: 'Împreună pentru un mâine mai bun pentru ei',
   storageNotice:
-    'Modificările sunt salvate doar în acest browser. Nu introdu date personale sau medicale reale.',
+    'Demo: modificările se salvează doar în acest browser și nu se sincronizează cu alte dispozitive. Nu introduceți date personale sau medicale reale.',
+  dataNotice: {
+    migrated: 'Datele demo anterioare ale contului au fost mutate în noul format — nu s-a pierdut nimic.',
+    recovered:
+      'Datele demo salvate erau deteriorate, așa că s-au încărcat datele inițiale. O copie a datelor anterioare este păstrată în acest browser.',
+    unavailable:
+      'Stocarea browserului nu este disponibilă: demo-ul funcționează, dar modificările se pierd la reîncărcarea paginii.',
+    notSaved: 'Modificările nu au putut fi salvate în acest browser. Rămân valabile doar până la reîncărcarea paginii.',
+  },
   loading: 'Se încarcă contul…',
   close: 'Închide',
   cancel: 'Anulează',
@@ -36,7 +44,9 @@ const account: AccountDictionary = {
     doctor: 'Medic: {name}',
     book: 'Programează o vizită',
     empty: 'Nu ai nicio programare. Alege un moment convenabil — durează un minut.',
-    added: 'Programare demonstrativă adăugată doar în acest browser. Clinica nu a fost notificată.',
+    added:
+      'Programare demo creată doar în acest browser; așteaptă confirmarea în panoul de administrare demo. Clinica nu a fost notificată.',
+    cancelled: 'Anulată de clinică: {when}',
   },
 
   vaccineReminder: {
@@ -125,19 +135,50 @@ const account: AccountDictionary = {
   reset: {
     button: 'Resetează datele demo',
     title: 'Resetezi datele demo?',
-    text: 'Toate modificările tale din acest browser vor fi șterse, iar contul va reveni la datele demo inițiale.',
+    text:
+      'Toate modificările din acest browser vor fi șterse: animalele, programările demo din cont, din panoul de administrare și din calendarul site-ului, precum și programul medicilor revin la datele demo inițiale.',
     confirm: 'Da, resetează',
     done: 'Datele demo au fost resetate.',
   },
 
   records: {
-    names: { murchyk: 'Murcik', luna: 'Luna' },
-    breeds: { europeanShorthair: 'European cu păr scurt', goldenRetriever: 'Golden Retriever' },
+    names: {
+      murchyk: 'Murcik',
+      luna: 'Luna',
+      bella: 'Bella',
+      rocky: 'Rocky',
+      simba: 'Simba',
+      max: 'Max',
+    },
+    breeds: {
+      europeanShorthair: 'European cu păr scurt',
+      goldenRetriever: 'Golden Retriever',
+      britishShorthair: 'British cu păr scurt',
+      beagle: 'Beagle',
+      maineCoon: 'Maine Coon',
+      labrador: 'Labrador Retriever',
+    },
+    owners: {
+      anna: 'Ana Popescu',
+      iryna: 'Irina Dumitru',
+      oleh: 'Oleg Stan',
+      marko: 'Marco Ionescu',
+    },
     reasons: {
       checkup: 'Control de rutină',
       vaccination: 'Vaccinare',
       dental: 'Control stomatologic',
+      consultation: 'Consultație',
+      tests: 'Analize',
+      ultrasound: 'Ecografie',
       visit: 'Programare (rezervare demo)',
+    },
+    otherSpecies: 'Alt animal',
+    statuses: {
+      pending: 'Așteaptă confirmarea',
+      confirmed: 'Confirmată',
+      completed: 'Finalizată',
+      cancelled: 'Anulată',
     },
     doctors: { koval: 'Olena Koval', melnyk: 'Andrii Melnyk' },
     notes: {
@@ -145,6 +186,7 @@ const account: AccountDictionary = {
       vaccinationNote:
         'Vaccinarea a fost adăugată în program; următoarea dată a fost stabilită împreună cu proprietarul.',
       dentalNote: 'Examinare a cavității bucale; data următorului control a fost stabilită împreună cu medicul.',
+      completedNote: 'Consultație finalizată (înregistrare demo fără date medicale).',
     },
     vaccines: {
       rabies: 'Rabie',

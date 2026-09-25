@@ -8,7 +8,15 @@ const account: AccountDictionary = {
   demoLabel: 'Konto demonstracyjne · Wszystkie dane są fikcyjne',
   footerMotto: 'Razem dla ich lepszego jutra',
   storageNotice:
-    'Zmiany są zapisywane tylko w tej przeglądarce. Nie wprowadzaj prawdziwych danych osobowych ani medycznych.',
+    'Demo: zmiany są zapisywane tylko w tej przeglądarce i nie synchronizują się z innymi urządzeniami. Nie wpisuj prawdziwych danych osobowych ani medycznych.',
+  dataNotice: {
+    migrated: 'Wcześniejsze dane demo konta przeniesiono do nowego formatu — nic nie zginęło.',
+    recovered:
+      'Zapisane dane demo były uszkodzone, dlatego wczytano dane początkowe. Kopia poprzednich danych została zachowana w tej przeglądarce.',
+    unavailable:
+      'Pamięć przeglądarki jest niedostępna: demo działa, ale zmiany znikną po odświeżeniu strony.',
+    notSaved: 'Nie udało się zapisać zmian w tej przeglądarce. Obowiązują tylko do odświeżenia strony.',
+  },
   loading: 'Wczytywanie konta…',
   close: 'Zamknij',
   cancel: 'Anuluj',
@@ -36,7 +44,9 @@ const account: AccountDictionary = {
     doctor: 'Lekarz: {name}',
     book: 'Umów wizytę',
     empty: 'Brak zaplanowanych wizyt. Wybierz dogodny termin — zajmie to minutę.',
-    added: 'Demonstracyjna wizyta dodana tylko w tej przeglądarce. Klinika nie została powiadomiona.',
+    added:
+      'Demonstracyjna wizyta utworzona tylko w tej przeglądarce; czeka na potwierdzenie w demonstracyjnym panelu administratora. Klinika nie została powiadomiona.',
+    cancelled: 'Odwołana przez klinikę: {when}',
   },
 
   vaccineReminder: {
@@ -124,25 +134,57 @@ const account: AccountDictionary = {
   reset: {
     button: 'Zresetuj dane demo',
     title: 'Zresetować dane demo?',
-    text: 'Wszystkie Twoje zmiany w tej przeglądarce zostaną usunięte, a konto wróci do początkowych danych demo.',
+    text:
+      'Wszystkie zmiany w tej przeglądarce zostaną usunięte: zwierzęta, wizyty demo w koncie, w panelu administratora i w kalendarzu strony oraz grafik lekarzy wrócą do początkowych danych demo.',
     confirm: 'Tak, resetuj',
     done: 'Dane demo zostały zresetowane.',
   },
 
   records: {
-    names: { murchyk: 'Mruczek', luna: 'Luna' },
-    breeds: { europeanShorthair: 'Europejski krótkowłosy', goldenRetriever: 'Golden retriever' },
+    names: {
+      murchyk: 'Mruczek',
+      luna: 'Luna',
+      bella: 'Bella',
+      rocky: 'Rocky',
+      simba: 'Simba',
+      max: 'Max',
+    },
+    breeds: {
+      europeanShorthair: 'Europejski krótkowłosy',
+      goldenRetriever: 'Golden retriever',
+      britishShorthair: 'Brytyjski krótkowłosy',
+      beagle: 'Beagle',
+      maineCoon: 'Maine coon',
+      labrador: 'Labrador retriever',
+    },
+    owners: {
+      anna: 'Anna Popescu',
+      iryna: 'Iryna Dumitru',
+      oleh: 'Ołeh Stan',
+      marko: 'Marko Ionescu',
+    },
     reasons: {
       checkup: 'Badanie kontrolne',
       vaccination: 'Szczepienie',
       dental: 'Kontrola stomatologiczna',
+      consultation: 'Konsultacja',
+      tests: 'Badania laboratoryjne',
+      ultrasound: 'USG',
       visit: 'Wizyta (rezerwacja demo)',
+    },
+    otherSpecies: 'Inne zwierzę',
+    statuses: {
+      pending: 'Oczekuje na potwierdzenie',
+      confirmed: 'Potwierdzona',
+      completed: 'Zakończona',
+      cancelled: 'Odwołana',
     },
     doctors: { koval: 'Ołena Kowal', melnyk: 'Andrij Melnyk' },
     notes: {
       checkupNote: 'Wykonano badanie kontrolne. Właściciel otrzymał ogólne wskazówki dotyczące pielęgnacji.',
       vaccinationNote: 'Szczepienie dodano do harmonogramu; kolejny termin ustalono z właścicielem.',
       dentalNote: 'Badanie jamy ustnej; termin kolejnej kontroli ustalono z lekarzem.',
+      completedNote: 'Wizyta zakończona (zapis demo bez danych medycznych).',
     },
     vaccines: {
       rabies: 'Wścieklizna',
