@@ -576,7 +576,6 @@ button {
 }
 .calendar__month {
   font-weight: 700;
-  text-transform: capitalize;
 }
 .calendar__nav {
   display: inline-flex;
