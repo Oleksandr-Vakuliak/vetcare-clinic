@@ -13,6 +13,7 @@ const dict: Dictionary = {
     booking: 'Запис',
     contacts: 'Контакти',
     emergency: 'Термінова допомога',
+    account: 'Кабінет улюбленця',
   },
   header: {
     clinicName: 'ВетКлініка',

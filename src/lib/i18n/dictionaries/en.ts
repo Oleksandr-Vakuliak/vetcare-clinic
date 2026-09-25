@@ -13,6 +13,7 @@ const dict: Dictionary = {
     booking: "Booking",
     contacts: "Contacts",
     emergency: "Emergency",
+    account: "Pet account",
   },
   header: {
     clinicName: "VetClinic",

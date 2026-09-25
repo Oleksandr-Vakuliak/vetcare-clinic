@@ -14,6 +14,8 @@ export interface Dictionary {
     booking: string;
     contacts: string;
     emergency: string;
+    /** Secondary link to the demo pet account (/[locale]/account). */
+    account: string;
   };
   header: {
     clinicName: string;
