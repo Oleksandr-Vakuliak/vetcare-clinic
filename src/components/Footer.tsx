@@ -1,10 +1,12 @@
+import Link from 'next/link';
 import type { Dictionary } from '@/lib/i18n/types';
+import type { Locale } from '@/lib/i18n/config';
 import { siteContacts } from '@/lib/site-config';
 import { ClockIcon, PawIcon, PinIcon } from './icons';
 
 // Footer doubles as the contacts block (as in the design mockup): brand,
 // address + hours, and the map slot. `#contacts` is the target of the nav link.
-export default function Footer({ dict }: { dict: Dictionary }) {
+export default function Footer({ dict, locale }: { dict: Dictionary; locale: Locale }) {
   const c = dict.contacts;
   const year = new Date().getFullYear();
 
@@ -55,6 +57,10 @@ export default function Footer({ dict }: { dict: Dictionary }) {
           <p>
             © {year} {dict.header.clinicName}. {dict.footer.rights}
           </p>
+          {/* Secondary entry to the open demo admin panel (not a secured system). */}
+          <Link href={`/${locale}/admin`} className="site-footer__admin">
+            {dict.footer.adminLink}
+          </Link>
           <span className="demo-badge">{dict.footer.demoBadge}</span>
         </div>
       </div>

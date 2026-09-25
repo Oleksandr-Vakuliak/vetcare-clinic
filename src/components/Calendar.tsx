@@ -12,7 +12,8 @@ import {
   isSameDay,
   weekdayShortNames,
 } from '@/lib/dates';
-import { getSlotsForDate } from '@/lib/booking-data';
+import { toISODate } from '@/lib/account/dates';
+import { clinicToday } from '@/lib/clinic/time';
 import { ChevronLeftIcon, ChevronRightIcon } from './icons';
 
 interface Props {
@@ -22,8 +23,8 @@ interface Props {
   selectedTime: string | null;
   onSelectDate: (date: Date) => void;
   onSelectTime: (time: string) => void;
-  /** Extra unavailable slots, e.g. times already taken by demo appointments. */
-  isSlotTaken?: (date: Date, time: string) => boolean;
+  /** Slots of a clinic date ('YYYY-MM-DD') from the shared demo model. */
+  getSlots: (isoDate: string) => Array<{ time: string; available: boolean }>;
 }
 
 function subscribeNoop() {
@@ -37,7 +38,7 @@ export default function Calendar({
   selectedTime,
   onSelectDate,
   onSelectTime,
-  isSlotTaken,
+  getSlots,
 }: Props) {
   const c = dict.booking.calendar;
   // `today` is resolved only on the client (the server snapshot is `false`) so
@@ -50,28 +51,16 @@ export default function Calendar({
     return <div className="card calendar" style={{ minHeight: 440 }} aria-hidden="true" />;
   }
 
-  const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  // "Today" is the clinic's date (Europe/Bucharest), not the visitor's.
+  const today = clinicToday();
   const monthDate = new Date(today.getFullYear(), today.getMonth() + monthOffset, 1);
   const visible = { y: monthDate.getFullYear(), m: monthDate.getMonth() };
   const cells = buildMonthGrid(visible.y, visible.m);
   const weekdays = weekdayShortNames(locale);
   const atCurrentMonth = visible.y === today.getFullYear() && visible.m === today.getMonth();
-  // Busy demo slots, slots taken elsewhere, and hours that already passed today.
+  // Busy = booked (incl. pending requests), closed, in a break or already passed.
   const slots = selectedDate
-    ? getSlotsForDate(selectedDate).map((slot) => {
-        const [h, m] = slot.time.split(':').map(Number);
-        const start = new Date(
-          selectedDate.getFullYear(),
-          selectedDate.getMonth(),
-          selectedDate.getDate(),
-          h,
-          m,
-        );
-        const unavailable =
-          slot.busy || start <= now || Boolean(isSlotTaken?.(selectedDate, slot.time));
-        return { time: slot.time, busy: unavailable };
-      })
+    ? getSlots(toISODate(selectedDate)).map((slot) => ({ time: slot.time, busy: !slot.available }))
     : [];
 
   function changeMonth(delta: number) {
