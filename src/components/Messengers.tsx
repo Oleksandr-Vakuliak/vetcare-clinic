@@ -7,47 +7,48 @@ export default function Messengers({ dict }: { dict: Dictionary }) {
   const tg = telegramLink(siteContacts.telegram);
   const configured = Boolean(wa || tg);
 
+  const waContent = (
+    <>
+      <WhatsAppIcon width={26} height={26} /> {dict.messengers.whatsapp}
+    </>
+  );
+  const tgContent = (
+    <>
+      <TelegramIcon width={26} height={26} /> {dict.messengers.telegram}
+    </>
+  );
+
   return (
-    <section id="messengers" className="section">
-      <div className="container">
-        <div className="card messengers">
+    <section id="messengers" className="section section--compact">
+      <div className="container messengers">
+        <div className="messengers__text">
           <h2 className="section__title">{dict.messengers.title}</h2>
-          <p style={{ color: 'var(--color-muted)' }}>{dict.messengers.text}</p>
-
-          <div className="messengers__buttons">
-            {wa ? (
-              <a
-                className="btn btn--primary"
-                href={wa}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <WhatsAppIcon width={20} height={20} /> {dict.messengers.whatsapp}
-              </a>
-            ) : (
-              <button type="button" className="btn btn--primary" disabled aria-disabled="true">
-                <WhatsAppIcon width={20} height={20} /> {dict.messengers.whatsapp}
-              </button>
-            )}
-
-            {tg ? (
-              <a
-                className="btn btn--outline"
-                href={tg}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <TelegramIcon width={20} height={20} /> {dict.messengers.telegram}
-              </a>
-            ) : (
-              <button type="button" className="btn btn--outline" disabled aria-disabled="true">
-                <TelegramIcon width={20} height={20} /> {dict.messengers.telegram}
-              </button>
-            )}
-          </div>
-
+          <p>{dict.messengers.text}</p>
           {!configured && <p className="demo-note">{dict.messengers.demoNote}</p>}
         </div>
+
+        <div className="messengers__buttons">
+          {wa ? (
+            <a className="messenger-btn messenger-btn--wa" href={wa} target="_blank" rel="noopener noreferrer">
+              {waContent}
+            </a>
+          ) : (
+            <button type="button" className="messenger-btn messenger-btn--wa" disabled aria-disabled="true">
+              {waContent}
+            </button>
+          )}
+          {tg ? (
+            <a className="messenger-btn messenger-btn--tg" href={tg} target="_blank" rel="noopener noreferrer">
+              {tgContent}
+            </a>
+          ) : (
+            <button type="button" className="messenger-btn messenger-btn--tg" disabled aria-disabled="true">
+              {tgContent}
+            </button>
+          )}
+        </div>
+
+        <p className="handnote messengers__note">{dict.messengers.note}&nbsp;☺</p>
       </div>
     </section>
   );

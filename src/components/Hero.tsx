@@ -1,7 +1,12 @@
 import Image from 'next/image';
 import type { Dictionary } from '@/lib/i18n/types';
+import { HeartIcon } from './icons';
 
 export default function Hero({ dict }: { dict: Dictionary }) {
+  const cut = dict.hero.note.lastIndexOf(' ') + 1;
+  const noteHead = dict.hero.note.slice(0, cut);
+  const noteTail = dict.hero.note.slice(cut);
+
   return (
     <section className="hero" aria-label={dict.hero.title}>
       <div className="hero__media">
@@ -15,8 +20,6 @@ export default function Hero({ dict }: { dict: Dictionary }) {
         />
       </div>
 
-      <p className="hero__badge">{dict.hero.badge}</p>
-
       <div className="container hero__inner">
         <div className="hero__content">
           <h1 className="hero__title">{dict.hero.title}</h1>
@@ -29,6 +32,13 @@ export default function Hero({ dict }: { dict: Dictionary }) {
               {dict.hero.ctaContact}
             </a>
           </div>
+          <p className="handnote hero__note">
+            {noteHead}
+            {/* Keep the last word and the heart together on one line. */}
+            <span className="nowrap">
+              {noteTail} <HeartIcon width={22} height={22} />
+            </span>
+          </p>
         </div>
       </div>
     </section>

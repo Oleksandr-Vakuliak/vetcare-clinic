@@ -16,7 +16,6 @@ const dict: Dictionary = {
   },
   header: {
     clinicName: 'ВетКлініка',
-    tagline: 'Ветеринарна клініка',
     openMenu: 'Відкрити меню',
     closeMenu: 'Закрити меню',
     languageLabel: 'Мова сайту',
@@ -27,7 +26,7 @@ const dict: Dictionary = {
     ctaBooking: 'Обрати час',
     ctaContact: "Зв'язатися",
     imageAlt: 'Ветеринар тримає кота на руках',
-    badge: "Здоров'я ваших улюбленців — наша турбота",
+    note: "Більше щасливих днів разом",
   },
   services: {
     title: 'Наші послуги',
@@ -79,6 +78,7 @@ const dict: Dictionary = {
   },
   booking: {
     title: 'Оберіть зручний час',
+    note: "Турбота починається тут",
     demoNote: 'Демокалендар — години умовні.',
     calendar: {
       prevMonth: 'Попередній місяць',
@@ -89,6 +89,8 @@ const dict: Dictionary = {
       noSlots: 'На цю дату немає доступних годин.',
       chooseDay: 'Обрати',
       pastDay: 'недоступно',
+      availableOn: "Доступний час на",
+      legendOtherMonth: "Інший місяць",
     },
     form: {
       selectedLabel: 'Обрана дата й час',
@@ -100,7 +102,6 @@ const dict: Dictionary = {
       animalLabel: 'Тварина',
       animalOptions: { cat: 'Кіт', dog: 'Собака', other: 'Інше' },
       reasonLabel: 'Причина візиту',
-      reasonPlaceholder: 'Коротко опишіть причину',
       commLangLabel: 'Бажана мова спілкування',
       submit: 'Записатися',
       errors: {
@@ -110,6 +111,7 @@ const dict: Dictionary = {
         dateRequired: 'Оберіть дату й час у календарі.',
       },
       demoSuccess: 'Це демонстрація. Запис не створено, дані не надіслано.',
+      demoHint: "Демо: запис не буде створено.",
     },
   },
   messengers: {
@@ -117,6 +119,7 @@ const dict: Dictionary = {
     text: 'Напишіть нам у месенджер — відповімо якнайшвидше.',
     whatsapp: 'WhatsApp',
     telegram: 'Telegram',
+    note: "Пишіть у зручний спосіб",
     demoNote: 'Демонстраційний режим: контакти месенджерів ще не налаштовані.',
   },
   emergency: {
@@ -144,6 +147,7 @@ const dict: Dictionary = {
   footer: {
     demoBadge: 'Демонстраційний проєкт',
     rights: 'Вигаданий сайт для портфоліо.',
+    tagline: "Турбота сьогодні — здорове завтра",
   },
 };
 

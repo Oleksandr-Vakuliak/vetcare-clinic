@@ -6,6 +6,7 @@ import type { Locale } from '@/lib/i18n/config';
 import {
   buildMonthGrid,
   formatMonthYear,
+  formatDayMonth,
   formatFullDate,
   isPastDate,
   isSameDay,
@@ -43,7 +44,7 @@ export default function Calendar({
   const [monthOffset, setMonthOffset] = useState(0);
 
   if (!isClient) {
-    return <div className="card" style={{ minHeight: 440 }} aria-hidden="true" />;
+    return <div className="card calendar" style={{ minHeight: 440 }} aria-hidden="true" />;
   }
 
   const now = new Date();
@@ -59,8 +60,15 @@ export default function Calendar({
     setMonthOffset((o) => o + delta);
   }
 
+  // Grey, non-interactive days of the neighbouring months fill the first and last week.
+  const leading = cells.filter((d) => d === null).length;
+  const prevMonthDays = new Date(visible.y, visible.m, 0).getDate();
+  const trailing = (7 - (cells.length % 7)) % 7;
+
   return (
-    <div className="card">
+    <div className="card calendar">
+      <p className="calendar__demo">{dict.booking.demoNote}</p>
+
       <div className="calendar__head">
         <button
           type="button"
@@ -92,7 +100,13 @@ export default function Calendar({
 
       <div className="calendar__grid" role="group" aria-label={formatMonthYear(monthDate, locale)}>
         {cells.map((date, i) => {
-          if (!date) return <span key={i} className="day day--empty" aria-hidden="true" />;
+          if (!date) {
+            return (
+              <span key={i} className="day day--other" aria-hidden="true">
+                {prevMonthDays - leading + i + 1}
+              </span>
+            );
+          }
           const past = isPastDate(date, today);
           const selected = selectedDate ? isSameDay(date, selectedDate) : false;
           return (
@@ -113,6 +127,11 @@ export default function Calendar({
             </button>
           );
         })}
+        {Array.from({ length: trailing }, (_, i) => (
+          <span key={`next-${i}`} className="day day--other" aria-hidden="true">
+            {i + 1}
+          </span>
+        ))}
       </div>
 
       <div className="slots">
@@ -120,14 +139,9 @@ export default function Calendar({
           <p className="slots__empty">{c.selectDatePrompt}</p>
         ) : (
           <>
-            <div className="slots__legend">
-              <span>
-                <i className="dot dot--free" /> {c.legendFree}
-              </span>
-              <span>
-                <i className="dot dot--busy" /> {c.legendBusy}
-              </span>
-            </div>
+            <p className="slots__title">
+              {c.availableOn} <strong>{formatDayMonth(selectedDate, locale)}</strong>
+            </p>
             {slots.length === 0 ? (
               <p className="slots__empty">{c.noSlots}</p>
             ) : (
@@ -149,6 +163,17 @@ export default function Calendar({
             )}
           </>
         )}
+        <div className="slots__legend" aria-hidden="true">
+          <span>
+            <i className="dot dot--free" /> {c.legendFree}
+          </span>
+          <span>
+            <i className="dot dot--busy" /> {c.legendBusy}
+          </span>
+          <span>
+            <i className="dot dot--other" /> {c.legendOtherMonth}
+          </span>
+        </div>
       </div>
     </div>
   );

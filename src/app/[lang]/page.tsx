@@ -7,7 +7,6 @@ import About from '@/components/About';
 import Booking from '@/components/Booking';
 import Messengers from '@/components/Messengers';
 import EmergencySection from '@/components/EmergencySection';
-import Contacts from '@/components/Contacts';
 import Footer from '@/components/Footer';
 
 interface Props {
@@ -25,11 +24,10 @@ export default async function Page({ params }: Props) {
       <Services dict={dict} />
       <About dict={dict} />
 
-      <section id="booking" className="section">
+      <section id="booking" className="section section--tint">
         <div className="container">
           <div className="section__head">
             <h2 className="section__title">{dict.booking.title}</h2>
-            <span className="demo-note">{dict.booking.demoNote}</span>
           </div>
           <Booking dict={dict} locale={lang} />
         </div>
@@ -37,7 +35,6 @@ export default async function Page({ params }: Props) {
 
       <Messengers dict={dict} />
       <EmergencySection dict={dict} />
-      <Contacts dict={dict} />
       <Footer dict={dict} />
     </>
   );

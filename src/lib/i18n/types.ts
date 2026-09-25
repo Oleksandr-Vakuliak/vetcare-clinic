@@ -17,7 +17,6 @@ export interface Dictionary {
   };
   header: {
     clinicName: string;
-    tagline: string;
     openMenu: string;
     closeMenu: string;
     languageLabel: string;
@@ -28,7 +27,8 @@ export interface Dictionary {
     ctaBooking: string;
     ctaContact: string;
     imageAlt: string;
-    badge: string;
+    /** Short handwritten accent next to the hero text. */
+    note: string;
   };
   services: {
     title: string;
@@ -45,6 +45,8 @@ export interface Dictionary {
   };
   booking: {
     title: string;
+    /** Short handwritten accent. */
+    note: string;
     /** "Демокалендар — години умовні" */
     demoNote: string;
     calendar: {
@@ -57,6 +59,9 @@ export interface Dictionary {
       /** Accessible label prefix for a day button, e.g. "Обрати {date}". */
       chooseDay: string;
       pastDay: string;
+      /** Heading prefix above the time slots, e.g. "Доступний час на" + "12 жовтня". */
+      availableOn: string;
+      legendOtherMonth: string;
     };
     form: {
       selectedLabel: string;
@@ -68,7 +73,6 @@ export interface Dictionary {
       animalLabel: string;
       animalOptions: { cat: string; dog: string; other: string };
       reasonLabel: string;
-      reasonPlaceholder: string;
       commLangLabel: string;
       submit: string;
       errors: {
@@ -78,6 +82,8 @@ export interface Dictionary {
         dateRequired: string;
       };
       demoSuccess: string;
+      /** Small note under the submit button. */
+      demoHint: string;
     };
   };
   messengers: {
@@ -85,6 +91,8 @@ export interface Dictionary {
     text: string;
     whatsapp: string;
     telegram: string;
+    /** Short handwritten accent. */
+    note: string;
     demoNote: string;
   };
   emergency: {
@@ -112,5 +120,6 @@ export interface Dictionary {
   footer: {
     demoBadge: string;
     rights: string;
+    tagline: string;
   };
 }

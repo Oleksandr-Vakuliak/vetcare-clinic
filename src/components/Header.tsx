@@ -34,13 +34,8 @@ export default function Header({ dict, locale }: Props) {
 
   const brand = (
     <Link href={`/${locale}`} className="brand" aria-label={dict.header.clinicName}>
-      <span className="brand__mark">
-        <PawIcon width={22} height={22} />
-      </span>
-      <span className="brand__text">
-        {dict.header.clinicName}
-        <small>{dict.header.tagline}</small>
-      </span>
+      <PawIcon className="brand__paw" width={28} height={28} fill="currentColor" stroke="none" />
+      <span className="brand__name">{dict.header.clinicName}</span>
     </Link>
   );
 
@@ -59,9 +54,6 @@ export default function Header({ dict, locale }: Props) {
           </nav>
           <div className="header__actions">
             <LanguageSwitcher current={locale} label={dict.header.languageLabel} />
-            <a href="#booking" className="btn btn--primary">
-              {dict.hero.ctaBooking}
-            </a>
           </div>
         </div>
 
