@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState, useSyncExternalStore } from 'react';
 import type { Dictionary } from '@/lib/i18n/types';
 import type { Locale } from '@/lib/i18n/config';
 import {
@@ -23,6 +23,10 @@ interface Props {
   onSelectTime: (time: string) => void;
 }
 
+function subscribeNoop() {
+  return () => {};
+}
+
 export default function Calendar({
   dict,
   locale,
@@ -32,33 +36,27 @@ export default function Calendar({
   onSelectTime,
 }: Props) {
   const c = dict.booking.calendar;
-  // `today` and the visible month are resolved on the client after mount so
+  // `today` is resolved only on the client (the server snapshot is `false`) so
   // the server and client never disagree about "today" (no hydration mismatch).
-  const [today, setToday] = useState<Date | null>(null);
-  const [visible, setVisible] = useState<{ y: number; m: number } | null>(null);
+  const isClient = useSyncExternalStore(subscribeNoop, () => true, () => false);
+  // The visible month is stored as an offset from the current month.
+  const [monthOffset, setMonthOffset] = useState(0);
 
-  useEffect(() => {
-    const now = new Date();
-    setToday(new Date(now.getFullYear(), now.getMonth(), now.getDate()));
-    setVisible({ y: now.getFullYear(), m: now.getMonth() });
-  }, []);
-
-  if (!today || !visible) {
+  if (!isClient) {
     return <div className="card" style={{ minHeight: 440 }} aria-hidden="true" />;
   }
 
-  const monthDate = new Date(visible.y, visible.m, 1);
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const monthDate = new Date(today.getFullYear(), today.getMonth() + monthOffset, 1);
+  const visible = { y: monthDate.getFullYear(), m: monthDate.getMonth() };
   const cells = buildMonthGrid(visible.y, visible.m);
   const weekdays = weekdayShortNames(locale);
   const atCurrentMonth = visible.y === today.getFullYear() && visible.m === today.getMonth();
   const slots = selectedDate ? getSlotsForDate(selectedDate) : [];
 
   function changeMonth(delta: number) {
-    setVisible((v) => {
-      if (!v) return v;
-      const d = new Date(v.y, v.m + delta, 1);
-      return { y: d.getFullYear(), m: d.getMonth() };
-    });
+    setMonthOffset((o) => o + delta);
   }
 
   return (
