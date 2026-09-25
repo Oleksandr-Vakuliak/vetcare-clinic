@@ -43,7 +43,7 @@ Status legend: `Done` (implemented & verified) · `Todo` · `Backlog` (roadmap /
 
 | ID | Task | Status | Notes |
 | --- | --- | --- | --- |
-| ROADMAP-PL | Polish (PL) language | In progress | Moved into scope (see SPEC §3); add locale + `pl.ts` + loader + skip-link label |
+| ROADMAP-PL | Polish (PL) language | Done | Live at `/pl`; checked in Firefox + WebKit (desktop, narrow, iPhone emulation). Native-speaker review of the copy recommended before a real client launch. |
 | ROADMAP-PHOTOS | Replace demo photos / set real contacts when going live | Backlog | Edit `public/images/` + `site-config.ts` |
 | ROADMAP-BOOKING | Real booking integration (only if a client needs it) | Backlog | Gather requirements first; Calendly/email/backend |
 
