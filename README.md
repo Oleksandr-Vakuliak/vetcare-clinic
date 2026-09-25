@@ -28,6 +28,10 @@ UI or animation libraries.
   "awaiting confirmation" and appears in the demo admin panel.
 - **Accessibility** — semantic markup, labelled fields, visible focus, keyboard
   navigation, and a modal that closes on Escape and restores focus.
+- **Demo guide** under the hero — three steps (pet account → admin panel → pet account) so a
+  visitor sees the whole flow in a minute.
+- **Link previews** (Open Graph / Twitter card) in the page language, and a **branded 404**
+  in four languages (`app/global-not-found.tsx`).
 - Calm light theme with green accents; red is reserved for urgent help. Responsive
   for phone, tablet, and desktop.
 
@@ -131,6 +135,8 @@ Works on any Next.js-compatible host. No environment variables required.
 | Photos (hero, team) | `public/images/` — replace files with the same names |
 | Contacts (phone, WhatsApp, Telegram, map) | `src/lib/site-config.ts` |
 | Colors, spacing, styles | `src/app/globals.css` (CSS variables at the top) |
+| Site address for link previews (`siteUrl`) | `src/lib/site-config.ts` — change with a custom domain |
+| Link-preview image | `public/images/og.jpg` — rebuild with `node scripts/og-image.mjs` after changing `hero.jpg` |
 | Demo data (doctors' hours, slot length, time zone) | `src/lib/clinic/config.ts`, seed in `src/lib/clinic/seed.ts` |
 
 **Contacts / demo mode.** In `src/lib/site-config.ts` all contact values are `null` by
