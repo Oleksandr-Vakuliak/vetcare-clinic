@@ -4,6 +4,8 @@ A single-page website for a **fictional** veterinary clinic, built as a portfoli
 piece. It ships three complete language versions and a demo booking experience —
 with **no backend, database, or data storage**.
 
+**Live demo:** https://vetcare-clinic-pi.vercel.app
+
 Built with **Next.js 16 (App Router)** and **TypeScript**, using plain CSS and no
 UI or animation libraries.
 
@@ -40,7 +42,8 @@ npm run start
 
 Type check: `npx tsc --noEmit` · Lint: `npm run lint`
 
-Deploys to any Next.js-compatible host (e.g. Vercel). No environment variables required.
+Deployed on Vercel: https://vetcare-clinic-pi.vercel.app (auto-deploys from `main`).
+Works on any Next.js-compatible host. No environment variables required.
 
 ## Configuration
 
