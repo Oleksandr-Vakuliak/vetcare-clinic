@@ -199,12 +199,14 @@ keeps the selected pet and tab). Label "Демонстраційний кабі�
 - Tabs: visit history (date, reason, doctor → details with a short demo note, no treatment
   plans); vaccinations (name, date, next date if set); documents (clearly marked demo
   texts shown in a dialog; no download, not an official passport).
-- Add/edit pet form: name, species (cat/dog), breed, birth date, weight. Validation:
-  required fields, real past birth date, weight > 0. New pets get a stock cat/dog photo
-  and no invented history (empty states explain why).
+- Add/edit pet form: name, species (cat/dog), breed (optional), birth date, weight.
+  Validation: required fields, real past birth date (≤ 40 years), weight > 0 (≤ 150 kg).
+  New pets get a neutral cat/dog illustration and no invented history (empty states
+  explain why).
 
 **Data & storage.** Seed data in code, generated relative to the first visit (upcoming
-dates stay in the future). Changes live only in `localStorage` (never sent). Notice:
+dates stay in the future). The selected pet and tab are stored with the data, so they
+survive a language switch and a reload. Changes live only in `localStorage` (never sent). Notice:
 "Зміни зберігаються лише в цьому браузері. Не вводьте реальні персональні чи медичні
 дані". "Скинути демодані" with confirmation. If storage is unavailable or data is
 invalid, the account works with the seed data. No hydration errors, no flash of another
