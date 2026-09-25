@@ -55,3 +55,9 @@ export function isSameDay(a: Date, b: Date): boolean {
     a.getDate() === b.getDate()
   );
 }
+
+export function ciRedCheck() {
+  const unused = 1;
+  let x = 2;
+  return x;
+}
