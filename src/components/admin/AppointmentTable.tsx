@@ -76,11 +76,13 @@ export default function AppointmentTable({ appointments, pets, actions, showDate
               </td>
               <td>
                 <div className="admin-table__actions">
-                  <button type="button" className="btn btn--outline btn--sm" onClick={(e) => primary.onClick(e.currentTarget)}>
+                  <button
+                    type="button"
+                    className="btn btn--outline btn--sm"
+                    aria-label={`${primary.label}: ${info.name}, ${when}`}
+                    onClick={(e) => primary.onClick(e.currentTarget)}
+                  >
                     {primary.label}
-                    <span className="visually-hidden">
-                      : {info.name}, {when}
-                    </span>
                   </button>
                   <ActionMenu label={fill(a.actions.more, { pet: info.name, when })} items={actions.menuItems(appointment)} />
                 </div>

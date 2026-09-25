@@ -150,21 +150,23 @@ export default function ScheduleView() {
                   </span>
                   <span className="slot-row__actions">
                     {slot.appointment && (
-                      <button type="button" className="btn btn--outline btn--sm" onClick={(e) => actions.openDetails(slot.appointment!.id, e.currentTarget)}>
+                      <button
+                        type="button"
+                        className="btn btn--outline btn--sm"
+                        aria-label={`${a.actions.details}: ${pet}, ${slot.time}`}
+                        onClick={(e) => actions.openDetails(slot.appointment!.id, e.currentTarget)}
+                      >
                         {a.actions.details}
-                        <span className="visually-hidden">: {pet}, {slot.time}</span>
                       </button>
                     )}
                     {!slot.past && (slot.state === 'free' || slot.state === 'booked') && (
-                      <button type="button" className="btn btn--ghost btn--sm" onClick={() => toggle(slot, true)}>
+                      <button type="button" className="btn btn--ghost btn--sm" aria-label={`${s.close} ${slot.time}`} onClick={() => toggle(slot, true)}>
                         {s.close}
-                        <span className="visually-hidden"> {slot.time}</span>
                       </button>
                     )}
                     {!slot.past && slot.state === 'closed' && (
-                      <button type="button" className="btn btn--outline btn--sm" onClick={() => toggle(slot, false)}>
+                      <button type="button" className="btn btn--outline btn--sm" aria-label={`${s.reopen} ${slot.time}`} onClick={() => toggle(slot, false)}>
                         {s.reopen}
-                        <span className="visually-hidden"> {slot.time}</span>
                       </button>
                     )}
                   </span>
@@ -212,13 +214,13 @@ export default function ScheduleView() {
               <button
                 type="button"
                 className="btn btn--outline btn--sm"
+                aria-label={`${s.openDay}: ${formatShortDate(iso, locale)}`}
                 onClick={() => {
                   setDate(iso);
                   setView('day');
                 }}
               >
                 {s.openDay}
-                <span className="visually-hidden">: {formatShortDate(iso, locale)}</span>
               </button>
             </li>
           );
