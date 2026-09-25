@@ -8,6 +8,8 @@
 | `hero.jpg` | https://unsplash.com/photos/7bb7cfcb0def |
 | `vet-1.jpg` | https://unsplash.com/photos/2b71ea197ec2 |
 | `vet-2.jpg` | https://unsplash.com/photos/333f2da6031d |
+| `pet-cat.jpg` (кабінет, Мурчик) | https://images.unsplash.com/photo-1518791841217-8f162f1e1131 |
+| `pet-dog.jpg` (кабінет, Луна) | https://images.unsplash.com/photo-1633722715463-d30f4f325e24 |
 
 Щоб замінити фото — покладіть свій файл із тією ж назвою в цю теку
 (рекомендовані розміри: `hero.jpg` ~1600×1067, портрети ~800×1000).
