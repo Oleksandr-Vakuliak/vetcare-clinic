@@ -25,5 +25,3 @@ Closes #
 - [ ] Коміти за Conventional Commits
 - [ ] PR малий і сфокусований
 - [ ] Пройдено `/code-review` (і `/security-review` для чутливих змін)
-
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
