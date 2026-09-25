@@ -37,7 +37,7 @@ Status legend: `Done` (implemented & verified) · `Todo` · `Backlog` (roadmap /
 | QA-1 | Verification: build, typecheck, responsive, interactions, console | Done (Chromium) | Passes; other browsers pending (see QA-2) |
 | DOCS-1 | Documentation: SPEC, README, backlog | Done | This spec + English README |
 | QA-2 | Cross-browser / device check (Safari/iOS, Firefox) | Todo | Manual pass on real Safari/iOS |
-| DEPLOY-1 | Deploy to Vercel | Todo | Live URL; only on explicit request |
+| DEPLOY-1 | Deploy to Vercel | Done | Live: https://vetcare-clinic-pi.vercel.app (auto-deploys from `main`) |
 
 ## Roadmap (backlog — out of current scope)
 
