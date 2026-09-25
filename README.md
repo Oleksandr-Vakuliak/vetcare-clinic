@@ -3,7 +3,7 @@
 [![CI](https://github.com/Oleksandr-Vakuliak/vetcare-clinic/actions/workflows/ci.yml/badge.svg)](https://github.com/Oleksandr-Vakuliak/vetcare-clinic/actions/workflows/ci.yml)
 
 A single-page website for a **fictional** veterinary clinic, built as a portfolio
-piece. It ships three complete language versions and a demo booking experience —
+piece. It ships four complete language versions and a demo booking experience —
 with **no backend, database, or data storage**.
 
 **Live demo:** https://vetcare-clinic-pi.vercel.app
@@ -13,11 +13,11 @@ UI or animation libraries.
 
 ## Features
 
-- **Three full languages** — Romanian, Ukrainian, English — at `/ro`, `/uk`, `/en`
-  (`/` redirects to `/ro`), with an RO / UK / EN switcher in the header and mobile menu.
+- **Four full languages** — Romanian, Ukrainian, English, Polish — at `/ro`, `/uk`, `/en`, `/pl`
+  (`/` redirects to `/ro`), with an RO / UK / EN / PL switcher in the header and mobile menu.
 - All copy lives in translation dictionaries; components and layout are shared across
-  languages. Dates are localized via `Intl`. Adding a new language (e.g. Polish) is a
-  three-step change — see below.
+  languages. Dates are localized via `Intl`. Adding another language is a small,
+  type-checked change — see below.
 - **Sections:** header with mobile menu, hero, six services, team, demo booking
   calendar + form, messenger links, urgent-help block with an always-available button
   and modal, contacts, and footer.
@@ -54,7 +54,7 @@ Works on any Next.js-compatible host. No environment variables required.
 
 | What | Where |
 | --- | --- |
-| Translations (all text) | `src/lib/i18n/dictionaries/{ro,uk,en}.ts` |
+| Translations (all text) | `src/lib/i18n/dictionaries/{ro,uk,en,pl}.ts` |
 | Photos (hero, team) | `public/images/` — replace files with the same names |
 | Contacts (phone, WhatsApp, Telegram, map) | `src/lib/site-config.ts` |
 | Colors, spacing, styles | `src/app/globals.css` (CSS variables at the top) |
@@ -64,10 +64,10 @@ Works on any Next.js-compatible host. No environment variables required.
 default, so the messenger and call buttons show a clear demo-mode message instead of
 fake numbers. Fill in real values and the buttons become live automatically.
 
-**Add a language (e.g. Polish).** Add `'pl'` to `locales` and a `localeMeta.pl` entry in
-`src/lib/i18n/config.ts`, create `src/lib/i18n/dictionaries/pl.ts` (copy `uk.ts` and
-translate), and register a `pl` loader in `src/lib/i18n/dictionaries.ts`. Components stay
-unchanged.
+**Add a language (e.g. German).** Add `'de'` to `locales` and a `localeMeta.de` entry in
+`src/lib/i18n/config.ts`, create `src/lib/i18n/dictionaries/de.ts` (copy `en.ts` and
+translate), register a `de` loader in `src/lib/i18n/dictionaries.ts`, and add the skip-link
+label in `src/app/[lang]/layout.tsx` (TypeScript flags it). Components stay unchanged.
 
 ## Project structure
 
