@@ -36,3 +36,9 @@ export function whatsappLink(value: string | null): string | null {
 export function telegramLink(value: string | null): string | null {
   return value ? `https://t.me/${value.replace(/^@/, '')}` : null;
 }
+
+/**
+ * Public address of the site: base for absolute URLs in link previews (Open Graph).
+ * Change it together with a custom domain.
+ */
+export const siteUrl = 'https://vetcare-clinic-pi.vercel.app';

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getAccountDictionary, getDictionary } from '@/lib/i18n/dictionaries';
+import { socialMetadata } from '@/lib/seo';
 import { isLocale, localeMeta, locales } from '@/lib/i18n/config';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import AccountApp from '@/components/account/AccountApp';
@@ -14,10 +15,11 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { lang } = await params;
   if (!isLocale(lang)) return {};
-  const d = await getAccountDictionary(lang);
+  const [site, d] = await Promise.all([getDictionary(lang), getAccountDictionary(lang)]);
   return {
     title: d.metaTitle,
     description: d.subtitle,
+    ...socialMetadata(lang, site.header.clinicName, d.metaTitle, d.subtitle, site.hero.imageAlt),
     // Demo page with fictional data — keep it out of search results.
     robots: { index: false },
     alternates: {
