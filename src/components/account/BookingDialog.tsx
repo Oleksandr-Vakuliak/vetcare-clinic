@@ -12,7 +12,7 @@ import { toISODate } from '@/lib/account/dates';
 import Calendar from '../Calendar';
 import Dialog from './Dialog';
 import { fill } from './format';
-import { newId } from '../demo-store';
+import { commitDemo, newId } from '../demo-store';
 
 interface Props {
   site: Dictionary;
@@ -21,7 +21,7 @@ interface Props {
   state: DemoState;
   petId: string;
   petName: string;
-  onBooked: (next: DemoState) => void;
+  onBooked: () => void;
   onClose: () => void;
   returnFocus?: HTMLElement;
 }
@@ -49,14 +49,16 @@ export default function BookingDialog({
       setError(d.booking.chooseSlot);
       return;
     }
-    const result = createAppointment(
-      state,
-      { petId, guest: null, date: toISODate(date), time, doctorId: null, reason: { key: 'visit' }, source: 'account' },
-      clinicNow(),
-      newId('appt'),
+    // Booked on the latest data: another tab may have taken the slot meanwhile.
+    const e = commitDemo((latest) =>
+      createAppointment(
+        latest,
+        { petId, guest: null, date: toISODate(date), time, doctorId: null, reason: { key: 'visit' }, source: 'account' },
+        clinicNow(),
+        newId('appt'),
+      ),
     );
-    if (!result.ok) {
-      const e = result.error;
+    if (e) {
       setError(
         e === 'past'
           ? d.booking.errors.past
@@ -69,7 +71,7 @@ export default function BookingDialog({
       setTime(null);
       return;
     }
-    onBooked(result.state);
+    onBooked();
   }
 
   return (

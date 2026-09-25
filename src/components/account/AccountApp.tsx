@@ -350,8 +350,7 @@ export default function AccountApp({ site, d, locale }: Props) {
           petId={pet.id}
           petName={name}
           onClose={() => setModal(null)}
-          onBooked={(next) => {
-            updateDemo(() => next);
+          onBooked={() => {
             setNotice(d.appointment.added);
             setModal(null);
           }}
