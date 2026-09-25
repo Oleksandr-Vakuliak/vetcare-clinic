@@ -5,8 +5,6 @@ import { Caveat, Inter } from 'next/font/google';
 import '../globals.css';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { locales, localeMeta, isLocale, type Locale } from '@/lib/i18n/config';
-import Header from '@/components/Header';
-import EmergencyFab from '@/components/EmergencyFab';
 
 interface LangParams {
   params: Promise<{ lang: string }>;
@@ -60,17 +58,16 @@ export default async function LangLayout({
 }: LangParams & { children: ReactNode }) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
-  const dict = await getDictionary(lang);
 
+  // Each page renders its own header and <main id="main"> (the site and the
+  // pet account have different headers).
   return (
     <html lang={localeMeta[lang].htmlLang} className={`${sans.variable} ${hand.variable}`}>
       <body>
         <a className="skip-link" href="#main">
           {skipLabel[lang]}
         </a>
-        <Header dict={dict} locale={lang} />
-        <main id="main">{children}</main>
-        <EmergencyFab dict={dict} />
+        {children}
       </body>
     </html>
   );

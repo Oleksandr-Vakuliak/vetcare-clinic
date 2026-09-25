@@ -14,6 +14,7 @@ interface Props {
 
 export default function Header({ dict, locale }: Props) {
   const [open, setOpen] = useState(false);
+  const accountHref = `/${locale}/account`;
 
   const navItems = [
     { href: '#services', label: dict.nav.services },
@@ -53,6 +54,10 @@ export default function Header({ dict, locale }: Props) {
             ))}
           </nav>
           <div className="header__actions">
+            <Link href={accountHref} className="header__account">
+              <PawIcon width={18} height={18} />
+              {dict.nav.account}
+            </Link>
             <LanguageSwitcher current={locale} label={dict.header.languageLabel} />
           </div>
         </div>
@@ -86,6 +91,10 @@ export default function Header({ dict, locale }: Props) {
                 {dict.nav.emergency}
               </a>
             </nav>
+            <Link href={accountHref} className="btn btn--outline btn--block" onClick={() => setOpen(false)}>
+              <PawIcon width={18} height={18} />
+              {dict.nav.account}
+            </Link>
             <a href="#booking" className="btn btn--primary btn--block" onClick={() => setOpen(false)}>
               {dict.hero.ctaBooking}
             </a>
