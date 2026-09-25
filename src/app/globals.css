@@ -299,6 +299,15 @@ button {
   font-size: 1.4rem;
   letter-spacing: -0.02em;
 }
+/* Very narrow phones (≈320 px): keep the header on one line. */
+@media (max-width: 359px) {
+  .site-header__inner {
+    gap: 0.5rem;
+  }
+  .brand__name {
+    font-size: 1.15rem;
+  }
+}
 
 .header__desktop {
   display: none;
@@ -705,7 +714,7 @@ button {
    ============================================================ */
 .booking-grid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 1.5rem;
   align-items: start;
 }
@@ -755,7 +764,7 @@ button {
 .calendar__weekdays,
 .calendar__grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(7, minmax(0, 1fr));
   justify-items: center;
 }
 .calendar__weekdays {
@@ -772,8 +781,11 @@ button {
   row-gap: 0.3rem;
 }
 .day {
-  width: 38px;
-  height: 38px;
+  /* Up to 38px; shrinks on very narrow phones so 7 days always fit. */
+  width: 100%;
+  max-width: 38px;
+  height: auto;
+  aspect-ratio: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1385,6 +1397,12 @@ button {
   align-items: center;
   gap: 1.25rem;
   margin-left: auto;
+}
+/* Narrow phones: "back to site" + language menu move under the logo instead of
+   pushing the page wider than the screen. */
+.account-header .site-header__inner {
+  flex-wrap: wrap;
+  row-gap: 0.25rem;
 }
 .account-header__back {
   display: inline-flex;
