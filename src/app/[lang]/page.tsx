@@ -4,6 +4,7 @@ import { isLocale } from '@/lib/i18n/config';
 import Header from '@/components/Header';
 import EmergencyFab from '@/components/EmergencyFab';
 import Hero from '@/components/Hero';
+import DemoGuide from '@/components/DemoGuide';
 import Services from '@/components/Services';
 import About from '@/components/About';
 import Booking from '@/components/Booking';
@@ -25,6 +26,7 @@ export default async function Page({ params }: Props) {
       <Header dict={dict} locale={lang} />
       <main id="main">
         <Hero dict={dict} />
+        <DemoGuide dict={dict} locale={lang} />
         <Services dict={dict} />
         <About dict={dict} />
 

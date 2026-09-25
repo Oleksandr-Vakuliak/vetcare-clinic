@@ -29,6 +29,16 @@ const dict: Dictionary = {
     imageAlt: 'Weterynarz trzymający kota',
     note: 'Więcej szczęśliwych dni razem',
   },
+  demoGuide: {
+    title: 'To projekt demo — wypróbuj go w minutę',
+    text: 'Wszystkie dane są fikcyjne i zostają tylko w Twojej przeglądarce.',
+    steps: [
+      { title: 'Umów pupila', text: 'W koncie pupila wybierz Mruczka lub Lunę i wolny termin.', link: 'Konto pupila' },
+      { title: 'Potwierdź wizytę', text: 'W panelu administratora znajdź zgłoszenie „Oczekuje na potwierdzenie”.', link: 'Panel administratora' },
+      { title: 'Sprawdź status', text: 'Wróć do konta pupila — wizyta jest już potwierdzona.', link: 'Konto pupila' },
+    ],
+    formNote: 'Formularz rezerwacji poniżej także wysyła zgłoszenie do panelu administratora.',
+  },
   services: {
     title: 'Nasze usługi',
     items: [

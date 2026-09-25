@@ -32,6 +32,13 @@ export interface Dictionary {
     /** Short handwritten accent next to the hero text. */
     note: string;
   };
+  /** "How to try the demo" band under the hero: three steps (account → admin → account). */
+  demoGuide: {
+    title: string;
+    text: string;
+    steps: Array<{ title: string; text: string; link: string }>;
+    formNote: string;
+  };
   services: {
     title: string;
     /** Exactly six items, fixed order:
