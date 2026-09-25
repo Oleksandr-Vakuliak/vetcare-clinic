@@ -20,6 +20,14 @@ export function formatFullDate(date: Date, locale: Locale): string {
   }).format(date);
 }
 
+/** Day and month only, e.g. "12 жовтня" / "12 October". */
+export function formatDayMonth(date: Date, locale: Locale): string {
+  return new Intl.DateTimeFormat(localeMeta[locale].intl, {
+    day: 'numeric',
+    month: 'long',
+  }).format(date);
+}
+
 /** Monday-first short weekday names for the calendar header. */
 export function weekdayShortNames(locale: Locale): string[] {
   const fmt = new Intl.DateTimeFormat(localeMeta[locale].intl, { weekday: 'short' });
