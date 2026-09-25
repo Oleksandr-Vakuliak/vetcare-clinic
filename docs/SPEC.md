@@ -339,17 +339,22 @@ is fictional and stays in this browser.
 - AC: RO/UK/EN/PL; links go to `/[locale]/account`, `/[locale]/admin/appointments`;
   no horizontal overflow at 320 px; keyboard focus visible; no animations.
 
-**13.2 Link preview — Open Graph (#21).** Every page shares a 1200×630 image (hero photo,
-dark gradient, "VetClinic" + language-neutral caption, generated at build time with
-`opengraph-image.tsx`) plus `og:title`, `og:description`, `og:locale`, `og:site_name`,
+**13.2 Link preview — Open Graph (#21).** Every page shares a 1200×630 JPEG
+(`public/images/og.jpg`, ~65 KB so messengers show it: green panel with "VetClinic" +
+language-neutral caption, hero photo on the right; rebuilt with `node scripts/og-image.mjs`) plus `og:title`, `og:description`, `og:locale`, `og:site_name`,
 `og:type` and `twitter:card = summary_large_image`. Absolute URLs use `siteUrl` from
 `src/lib/site-config.ts` (change it together with a custom domain).
-- AC: tags present on every locale; image reachable with 200; lint/types/build pass.
+- AC: tags present on every locale and page (site, pet account, admin); image reachable
+  with 200; lint/types/build pass.
 
 **13.3 Custom 404 (#22).** Any unknown address inside a locale (`/uk/xyz`,
 `/pl/admin/xyz`, …) shows a branded page in that language — "Сторінку не знайдено", short
 text, links to the home page, the pet account and the admin panel — with HTTP status 404
 and `noindex`. Paths without a locale are already redirected to `/ro/...` by `proxy.ts`.
+Implementation: `app/global-not-found.tsx` (experimental `globalNotFound` flag — the Next.js
+docs recommend it when the root layout lives in a dynamic segment such as `app/[lang]`; a
+plain `[lang]/not-found.tsx` was not server-rendered). `proxy.ts` passes the URL locale in the
+`x-vetcare-locale` request header, so the page renders in the right language on the server.
 - AC: 4 languages, correct `<html lang>`, status 404, phone layout, no console errors.
 
 ## 14. Open questions
