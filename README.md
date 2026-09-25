@@ -1,5 +1,7 @@
 # VetClinic — multilingual veterinary clinic demo
 
+[![CI](https://github.com/Oleksandr-Vakuliak/vetcare-clinic/actions/workflows/ci.yml/badge.svg)](https://github.com/Oleksandr-Vakuliak/vetcare-clinic/actions/workflows/ci.yml)
+
 A single-page website for a **fictional** veterinary clinic, built as a portfolio
 piece. It ships three complete language versions and a demo booking experience —
 with **no backend, database, or data storage**.
@@ -41,6 +43,9 @@ npm run start
 ```
 
 Type check: `npx tsc --noEmit` · Lint: `npm run lint`
+
+The same checks (lint → type check → build) run in GitHub Actions on every pull request
+and every push to `main` — see `.github/workflows/ci.yml`.
 
 Deployed on Vercel: https://vetcare-clinic-pi.vercel.app (auto-deploys from `main`).
 Works on any Next.js-compatible host. No environment variables required.
