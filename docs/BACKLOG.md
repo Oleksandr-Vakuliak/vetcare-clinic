@@ -47,7 +47,7 @@ Status legend: `Done` (implemented & verified) · `Todo` · `Backlog` (roadmap /
 | ROADMAP-PHOTOS | Replace demo photos / set real contacts when going live | Backlog | Edit `public/images/` + `site-config.ts` |
 | ROADMAP-BOOKING | Real booking integration (only if a client needs it) | Backlog | Gather requirements first; Calendly/email/backend |
 | ADMIN-DEMO | Demo admin panel `/[locale]/admin` + shared local data model (#16) | In review | SPEC §11–12. Real admin would need server auth, roles, shared DB — see README. |
-| QA-NARROW | Horizontal overflow on very narrow screens (site + pet account) | Backlog | Found while testing #16, already on `main`: Chromium with a 15 px scrollbar overflows at 320 px (home, account) and 375 px (account header language button). Admin panel is clean. |
+| QA-NARROW | Horizontal overflow on very narrow screens (site + pet account) | In review | Found while testing #16, already on `main`: overflow at 320 px (home, account) and 375 px (account header). Fixed in #19 (issue #18), CSS only. |
 
 ## Maintenance (backlog — noticed in CI logs, not urgent)
 
