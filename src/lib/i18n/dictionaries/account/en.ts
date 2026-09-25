@@ -8,7 +8,15 @@ const account: AccountDictionary = {
   demoLabel: 'Demo account · All data is fictional',
   footerMotto: 'Together for their better tomorrow',
   storageNotice:
-    'Changes are saved only in this browser. Do not enter real personal or medical data.',
+    'Demo: changes are saved only in this browser and are not synced to other devices. Do not enter real personal or medical data.',
+  dataNotice: {
+    migrated: 'Your earlier demo account data was moved to the new format — nothing was lost.',
+    recovered:
+      'The saved demo data was damaged, so the initial data was loaded. A copy of the previous data is kept in this browser.',
+    unavailable:
+      'Browser storage is unavailable: the demo works, but changes will be lost when the page reloads.',
+    notSaved: 'Changes could not be saved in this browser. They last only until the page reloads.',
+  },
   loading: 'Loading the account…',
   close: 'Close',
   cancel: 'Cancel',
@@ -36,7 +44,9 @@ const account: AccountDictionary = {
     doctor: 'Vet: {name}',
     book: 'Book an appointment',
     empty: 'No appointments scheduled. Pick a convenient time — it takes a minute.',
-    added: 'Demo appointment added in this browser only. The clinic has not been notified.',
+    added:
+      'Demo appointment created in this browser only; it is waiting for confirmation in the demo admin panel. The clinic has not been notified.',
+    cancelled: 'Cancelled by the clinic: {when}',
   },
 
   vaccineReminder: {
@@ -124,25 +134,57 @@ const account: AccountDictionary = {
   reset: {
     button: 'Reset demo data',
     title: 'Reset demo data?',
-    text: 'All your changes in this browser will be removed and the account will return to the initial demo data.',
+    text:
+      'All changes in this browser will be removed: pets, demo appointments in the account, the admin panel and the site calendar, and the doctors’ schedule return to the initial demo data.',
     confirm: 'Yes, reset',
     done: 'Demo data has been reset.',
   },
 
   records: {
-    names: { murchyk: 'Murchyk', luna: 'Luna' },
-    breeds: { europeanShorthair: 'European Shorthair', goldenRetriever: 'Golden Retriever' },
+    names: {
+      murchyk: 'Murchyk',
+      luna: 'Luna',
+      bella: 'Bella',
+      rocky: 'Rocky',
+      simba: 'Simba',
+      max: 'Max',
+    },
+    breeds: {
+      europeanShorthair: 'European Shorthair',
+      goldenRetriever: 'Golden Retriever',
+      britishShorthair: 'British Shorthair',
+      beagle: 'Beagle',
+      maineCoon: 'Maine Coon',
+      labrador: 'Labrador Retriever',
+    },
+    owners: {
+      anna: 'Anna Popescu',
+      iryna: 'Iryna Dumitru',
+      oleh: 'Oleh Stan',
+      marko: 'Marko Ionescu',
+    },
     reasons: {
       checkup: 'Routine check-up',
       vaccination: 'Vaccination',
       dental: 'Dental check',
+      consultation: 'Consultation',
+      tests: 'Lab tests',
+      ultrasound: 'Ultrasound',
       visit: 'Appointment (demo booking)',
+    },
+    otherSpecies: 'Other animal',
+    statuses: {
+      pending: 'Awaiting confirmation',
+      confirmed: 'Confirmed',
+      completed: 'Completed',
+      cancelled: 'Cancelled',
     },
     doctors: { koval: 'Olena Koval', melnyk: 'Andrii Melnyk' },
     notes: {
       checkupNote: 'Routine check-up done. The owner received general care tips.',
       vaccinationNote: 'Vaccination added to the schedule; the next date was agreed with the owner.',
       dentalNote: 'Mouth examination; the next check date was agreed with the vet.',
+      completedNote: 'Appointment completed (demo record without medical data).',
     },
     vaccines: {
       rabies: 'Rabies',

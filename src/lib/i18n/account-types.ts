@@ -14,6 +14,8 @@ export interface AccountDictionary {
   demoLabel: string;
   footerMotto: string;
   storageNotice: string;
+  /** Explains how the local data was loaded (shown in the account and the admin panel). */
+  dataNotice: { migrated: string; recovered: string; unavailable: string; notSaved: string };
   loading: string;
   close: string;
   cancel: string;
@@ -39,6 +41,8 @@ export interface AccountDictionary {
     book: string;
     empty: string;
     added: string;
+    /** "Скасовано клінікою: {when}" — an upcoming appointment cancelled in the admin panel. */
+    cancelled: string;
   };
 
   vaccineReminder: {
@@ -122,11 +126,31 @@ export interface AccountDictionary {
 
   /** Demo records referenced by key from the seed data. */
   records: {
-    names: { murchyk: string; luna: string };
-    breeds: { europeanShorthair: string; goldenRetriever: string };
-    reasons: { checkup: string; vaccination: string; dental: string; visit: string };
+    names: { murchyk: string; luna: string; bella: string; rocky: string; simba: string; max: string };
+    breeds: {
+      europeanShorthair: string;
+      goldenRetriever: string;
+      britishShorthair: string;
+      beagle: string;
+      maineCoon: string;
+      labrador: string;
+    };
+    /** Fictional owners (anna = the pet account's owner). */
+    owners: { anna: string; iryna: string; oleh: string; marko: string };
+    reasons: {
+      checkup: string;
+      vaccination: string;
+      dental: string;
+      consultation: string;
+      tests: string;
+      ultrasound: string;
+      visit: string;
+    };
+    /** A site request may be for an animal other than a cat or a dog. */
+    otherSpecies: string;
+    statuses: { pending: string; confirmed: string; completed: string; cancelled: string };
     doctors: { koval: string; melnyk: string };
-    notes: { checkupNote: string; vaccinationNote: string; dentalNote: string };
+    notes: { checkupNote: string; vaccinationNote: string; dentalNote: string; completedNote: string };
     vaccines: { rabies: string; complexCat: string; complexDog: string };
     documents: {
       afterCheckup: string;

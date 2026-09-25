@@ -2,9 +2,10 @@
 
 import type { AccountDictionary, PluralForms } from '@/lib/i18n/account-types';
 import { localeMeta, type Locale } from '@/lib/i18n/config';
-import type { Pet, Text } from '@/lib/account/types';
+import type { Appointment, AppointmentStatus, Pet, Text } from '@/lib/clinic/types';
 import { parseISODate } from '@/lib/account/dates';
 import { petAge } from '@/lib/account/age';
+import { clinicToday } from '@/lib/clinic/time';
 
 /** Replace {placeholders} in a translated string. */
 export function fill(template: string, vars: Record<string, string | number>): string {
@@ -26,6 +27,41 @@ export function petBreed(pet: Pet, d: AccountDictionary): string | null {
   return pet.breed ? resolveText(pet.breed, d.records.breeds) : null;
 }
 
+export function ownerName(pet: Pet, d: AccountDictionary): string {
+  return resolveText(pet.owner, d.records.owners);
+}
+
+export function reasonText(reason: Text, d: AccountDictionary): string {
+  return resolveText(reason, d.records.reasons);
+}
+
+export function doctorName(id: string, d: AccountDictionary): string {
+  return d.records.doctors[id as keyof typeof d.records.doctors] ?? id;
+}
+
+export function statusLabel(status: AppointmentStatus, d: AccountDictionary): string {
+  return d.records.statuses[status];
+}
+
+/** Pet name, owner and species label of an appointment (registered pet or site request). */
+export function appointmentPet(
+  appointment: Appointment,
+  pets: Pet[],
+  d: AccountDictionary,
+): { pet: Pet | null; name: string; owner: string; species: string } {
+  const pet = appointment.petId ? (pets.find((p) => p.id === appointment.petId) ?? null) : null;
+  if (pet) {
+    return { pet, name: petName(pet, d), owner: ownerName(pet, d), species: d.pets.species[pet.species] };
+  }
+  const guest = appointment.guest;
+  return {
+    pet: null,
+    name: guest?.petName ?? '—',
+    owner: guest?.ownerName ?? '—',
+    species: guest ? (guest.species === 'other' ? d.records.otherSpecies : d.pets.species[guest.species]) : '—',
+  };
+}
+
 function plural(forms: PluralForms, n: number, locale: Locale): string {
   const category = new Intl.PluralRules(localeMeta[locale].intl).select(n);
   const form = category in forms ? forms[category as keyof PluralForms] : forms.other;
@@ -33,7 +69,7 @@ function plural(forms: PluralForms, n: number, locale: Locale): string {
 }
 
 export function formatAge(birthDate: string, d: AccountDictionary, locale: Locale): string {
-  const age = petAge(birthDate, new Date());
+  const age = petAge(birthDate, clinicToday());
   if (!age) return '—';
   if (age.years > 0) return plural(d.pets.age.years, age.years, locale);
   if (age.months > 0) return plural(d.pets.age.months, age.months, locale);
