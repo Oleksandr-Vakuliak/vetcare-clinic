@@ -1962,7 +1962,6 @@ button.record-row:hover {
   font-size: 0.85rem;
   font-weight: 600;
   line-height: 1.3;
-  white-space: nowrap;
 }
 .status-badge--pending {
   background: #fdecc2;
@@ -2206,6 +2205,7 @@ button.record-row:hover {
 /* Figures */
 .admin-stats {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 1rem;
   margin-bottom: 1.25rem;
 }
@@ -2303,23 +2303,23 @@ button.record-row:hover {
   width: 100%;
   border-collapse: collapse;
 }
+.admin-table,
+.admin-table tbody {
+  display: block;
+}
 .admin-table thead {
   display: none;
 }
 .admin-table tr {
   display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 0.6rem 1rem;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.5rem;
   padding: 0.9rem 0;
   border-top: 1px solid var(--color-border);
 }
 .admin-table td {
   display: block;
   min-width: 0;
-}
-.admin-table td:nth-child(2),
-.admin-table td:nth-child(5) {
-  grid-column: 1 / -1;
 }
 .admin-table td:nth-child(2) {
   order: -1;
@@ -2333,7 +2333,8 @@ button.record-row:hover {
   font-weight: 600;
 }
 .admin-table__date {
-  display: block;
+  display: inline-block;
+  margin-right: 0.5rem;
   font-size: 0.85rem;
   color: var(--color-muted);
 }
@@ -2374,6 +2375,7 @@ button.record-row:hover {
 }
 .admin-pet__meta {
   display: block;
+  overflow-wrap: anywhere;
   color: var(--color-muted);
   font-size: 0.92rem;
 }
@@ -2418,7 +2420,7 @@ a.admin-more:hover {
 }
 .action-menu__list {
   position: absolute;
-  right: 0;
+  left: 0;
   top: calc(100% + 4px);
   z-index: 20;
   min-width: 13rem;
@@ -2451,6 +2453,7 @@ a.admin-more:hover {
 /* Doctors' state + quick actions */
 .admin-split {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 1.25rem;
 }
 .admin-split .admin-panel {
@@ -2478,13 +2481,14 @@ a.admin-more:hover {
 }
 .admin-chips {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.4rem;
 }
 .admin-chip {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 5.5rem;
+  min-width: 4.5rem;
   min-height: 34px;
   padding: 0.25rem 0.75rem;
   border: 1px solid var(--color-border);
@@ -2684,6 +2688,7 @@ a.admin-more:hover {
 }
 .schedule-week {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 0.75rem;
   margin: 0.75rem 0 0;
   padding: 0;
@@ -2718,6 +2723,7 @@ a.admin-more:hover {
 /* Pets */
 .pets-layout {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 1.25rem;
 }
 .pets-layout > .admin-panel {
@@ -2753,6 +2759,7 @@ a.admin-more:hover {
 }
 .pet-card__head {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 1rem;
 }
 .pet-card__photo {
@@ -2788,7 +2795,8 @@ a.admin-more:hover {
   font-weight: 500;
 }
 .admin-history-row {
-  grid-template-columns: 1fr auto;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: start;
   padding: 0.75rem 1rem;
   font-size: 1rem;
 }
@@ -2888,6 +2896,22 @@ a.admin-more:hover {
   .admin-field--search {
     grid-column: auto;
   }
+  .admin-split {
+    grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+  }
+  .schedule-week {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* Wide screens: a real table next to the sidebar (below this it would not fit). */
+@media (min-width: 1200px) {
+  .admin-table {
+    display: table;
+  }
+  .admin-table tbody {
+    display: table-row-group;
+  }
   .admin-table thead {
     display: table-header-group;
   }
@@ -2911,14 +2935,16 @@ a.admin-more:hover {
   .admin-table__time {
     width: 7rem;
   }
+  .status-badge {
+    white-space: nowrap;
+  }
   .admin-table__actions .btn {
     min-width: 8.5rem;
   }
-  .admin-split {
-    grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
-  }
-  .schedule-week {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+  /* In the table the menu sits at the right edge: open it leftwards. */
+  .action-menu__list {
+    left: auto;
+    right: 0;
   }
   .pets-layout {
     grid-template-columns: minmax(16rem, 1fr) minmax(0, 2fr);
