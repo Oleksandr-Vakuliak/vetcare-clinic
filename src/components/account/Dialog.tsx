@@ -11,6 +11,9 @@ interface Props {
   children: ReactNode;
   /** Wider dialog for the booking calendar. */
   wide?: boolean;
+  /** Element to refocus on close. Safari doesn't focus buttons on click, so
+   * document.activeElement alone can't be trusted as the opener. */
+  returnFocus?: HTMLElement | null;
 }
 
 const FOCUSABLE =
@@ -18,14 +21,16 @@ const FOCUSABLE =
 
 // Accessible modal: focus moves inside on open, Tab stays inside, Escape and the
 // backdrop close it, and focus returns to the element that opened it.
-export default function Dialog({ title, closeLabel, onClose, children, wide }: Props) {
+export default function Dialog({ title, closeLabel, onClose, children, wide, returnFocus }: Props) {
   const titleId = useId();
   const dialogRef = useRef<HTMLDivElement>(null);
   const onCloseRef = useRef(onClose);
+  const returnRef = useRef(returnFocus);
 
   useEffect(() => {
     onCloseRef.current = onClose;
-  }, [onClose]);
+    returnRef.current = returnFocus;
+  }, [onClose, returnFocus]);
 
   useEffect(() => {
     const opener = document.activeElement as HTMLElement | null;
@@ -64,7 +69,7 @@ export default function Dialog({ title, closeLabel, onClose, children, wide }: P
     return () => {
       document.removeEventListener('keydown', onKey);
       document.body.style.overflow = overflow;
-      opener?.focus();
+      (returnRef.current ?? opener)?.focus();
     };
   }, []);
 

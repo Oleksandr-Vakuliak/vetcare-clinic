@@ -21,6 +21,7 @@ interface Props {
   petName: string;
   onBooked: (next: AccountState) => void;
   onClose: () => void;
+  returnFocus?: HTMLElement;
 }
 
 // Reuses the site's demo calendar. Past times, busy demo slots and slots that
@@ -34,6 +35,7 @@ export default function BookingDialog({
   petName,
   onBooked,
   onClose,
+  returnFocus,
 }: Props) {
   const [date, setDate] = useState<Date | null>(null);
   const [time, setTime] = useState<string | null>(null);
@@ -59,7 +61,7 @@ export default function BookingDialog({
   }
 
   return (
-    <Dialog title={fill(d.booking.title, { name: petName })} closeLabel={d.close} onClose={onClose} wide>
+    <Dialog title={fill(d.booking.title, { name: petName })} closeLabel={d.close} onClose={onClose} returnFocus={returnFocus} wide>
       <p className="dialog-intro">{d.booking.intro}</p>
       <Calendar
         dict={site}
