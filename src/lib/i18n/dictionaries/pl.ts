@@ -100,6 +100,8 @@ const dict: Dictionary = {
       namePlaceholder: 'Twoje imię',
       phoneLabel: 'Telefon',
       phonePlaceholder: '+40 700 000 000',
+      petNameLabel: 'Imię zwierzęcia',
+      petNamePlaceholder: 'Imię Twojego pupila',
       animalLabel: 'Zwierzę',
       animalOptions: { cat: 'Kot', dog: 'Pies', other: 'Inne' },
       reasonLabel: 'Powód wizyty',
@@ -110,9 +112,13 @@ const dict: Dictionary = {
         phoneRequired: 'Podaj numer telefonu.',
         phoneInvalid: 'Podaj poprawny numer telefonu.',
         dateRequired: 'Wybierz datę i godzinę w kalendarzu.',
+        petNameRequired: 'Podaj imię zwierzęcia.',
+        slotUnavailable: 'Ten termin właśnie stał się niedostępny. Wybierz inny.',
       },
-      demoSuccess: 'To demonstracja. Wizyta nie została utworzona, dane nie zostały wysłane.',
-      demoHint: 'Demo: wizyta nie zostanie utworzona.',
+      demoSuccess:
+        'Demonstracyjna rezerwacja utworzona tylko w tej przeglądarce. Czeka na potwierdzenie w demonstracyjnym panelu administratora. Nic nikomu nie wysłano.',
+      demoHint:
+        'Demo: zgłoszenie zapisuje się tylko w tej przeglądarce; numer telefonu nie jest zapisywany ani nigdzie wysyłany.',
     },
   },
   messengers: {
@@ -148,6 +154,7 @@ const dict: Dictionary = {
   footer: {
     demoBadge: 'Projekt demonstracyjny',
     rights: 'Fikcyjna strona stworzona do portfolio.',
+    adminLink: 'Demo dla administratora',
     tagline: 'Troska dziś — zdrowie jutro',
   },
 };
