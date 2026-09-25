@@ -299,6 +299,15 @@ button {
   font-size: 1.4rem;
   letter-spacing: -0.02em;
 }
+/* Very narrow phones (≈320 px): keep the header on one line. */
+@media (max-width: 359px) {
+  .site-header__inner {
+    gap: 0.5rem;
+  }
+  .brand__name {
+    font-size: 1.15rem;
+  }
+}
 
 .header__desktop {
   display: none;
@@ -1949,15 +1958,5 @@ button.record-row:hover {
   }
   .account-tab {
     font-size: 1rem;
-  }
-}
-
-/* Very narrow phones (≈320 px): keep the header on one line. */
-@media (max-width: 359px) {
-  .site-header__inner {
-    gap: 0.5rem;
-  }
-  .brand__name {
-    font-size: 1.15rem;
   }
 }
