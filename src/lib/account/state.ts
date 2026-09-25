@@ -1,20 +1,25 @@
-import { getSlotsForDate } from '../booking-data.ts';
-import { compareDateTime, parseISODate } from './dates.ts';
+// Pet account view of the shared demo model (../clinic): the visitor's pets,
+// their appointments, history, vaccinations and documents.
+
+import { ACCOUNT_OWNER_KEY } from '../clinic/config.ts';
+import { byDateTime } from '../clinic/appointments.ts';
+import { isActive } from '../clinic/schedule.ts';
+import { hasStarted } from '../clinic/time.ts';
+import type { ClinicNow } from '../clinic/time.ts';
 import type {
-  AccountState,
   Appointment,
+  DemoState,
   Pet,
   PetDocument,
   Species,
   TabId,
+  Text,
   Vaccination,
-  Visit,
-} from './types.ts';
+} from '../clinic/types.ts';
 
-const TIME_RE = /^([01]\d|2[0-3]):[0-5]\d$/;
 const TAB_IDS: TabId[] = ['visits', 'vaccines', 'documents'];
 
-type PetValue = {
+export type PetValue = {
   name: string;
   species: Species;
   breed: string | null;
@@ -22,11 +27,25 @@ type PetValue = {
   weightKg: number;
 };
 
-export function petById(state: AccountState, id: string): Pet | null {
+export function petById(state: DemoState, id: string): Pet | null {
   return state.pets.find((pet) => pet.id === id) ?? null;
 }
 
-export function addPet(state: AccountState, value: PetValue, id: string): AccountState {
+/** Pets shown in the pet account (the visitor's own). */
+export function accountPets(state: DemoState): Pet[] {
+  return state.pets.filter((pet) => pet.inAccount);
+}
+
+/**
+ * Adds a pet. From the pet account (default) it belongs to the account owner and
+ * becomes the selected pet; the admin panel passes the owner and `inAccount: false`.
+ */
+export function addPet(
+  state: DemoState,
+  value: PetValue,
+  id: string,
+  options: { owner: Text; inAccount: boolean } = { owner: { key: ACCOUNT_OWNER_KEY }, inAccount: true },
+): DemoState {
   const pet: Pet = {
     id,
     name: { text: value.name },
@@ -35,15 +54,18 @@ export function addPet(state: AccountState, value: PetValue, id: string): Accoun
     birthDate: value.birthDate,
     weightKg: value.weightKg,
     photo: null,
+    owner: options.owner,
+    inAccount: options.inAccount,
   };
   return {
     ...state,
     pets: [...state.pets, pet],
-    ui: { petId: id, tab: 'visits' },
+    ui: options.inAccount ? { petId: id, tab: 'visits' } : state.ui,
   };
 }
 
-export function updatePet(state: AccountState, id: string, value: PetValue): AccountState {
+/** Updates the basic data; `owner` is changed only when given (admin panel). */
+export function updatePet(state: DemoState, id: string, value: PetValue, owner?: Text): DemoState {
   return {
     ...state,
     pets: state.pets.map((pet) => {
@@ -57,125 +79,61 @@ export function updatePet(state: AccountState, id: string, value: PetValue): Acc
         birthDate: value.birthDate,
         weightKg: value.weightKg,
         photo: speciesChanged ? null : pet.photo,
+        owner: owner ?? pet.owner,
       };
     }),
   };
 }
 
-export function selectPet(state: AccountState, petId: string): AccountState {
-  if (!petById(state, petId)) return state;
+export function selectPet(state: DemoState, petId: string): DemoState {
+  if (!accountPets(state).some((pet) => pet.id === petId)) return state;
   return { ...state, ui: { ...state.ui, petId } };
 }
 
-export function selectTab(state: AccountState, tab: TabId): AccountState {
+export function selectTab(state: DemoState, tab: TabId): DemoState {
   if (!TAB_IDS.includes(tab)) return state;
   return { ...state, ui: { ...state.ui, tab } };
 }
 
-export function isSlotTaken(state: AccountState, date: string, time: string): boolean {
-  return state.appointments.some((a) => a.date === date && a.time === time);
-}
-
-export function addAppointment(
-  state: AccountState,
-  input: { petId: string; date: string; time: string },
-  now: Date,
-  id: string,
-):
-  | { ok: true; state: AccountState; appointment: Appointment }
-  | { ok: false; reason: 'unknownPet' | 'invalid' | 'past' | 'busy' | 'taken' } {
-  if (!petById(state, input.petId)) {
-    return { ok: false, reason: 'unknownPet' };
-  }
-
-  const parsedDate = parseISODate(input.date);
-  if (!parsedDate || !TIME_RE.test(input.time)) {
-    return { ok: false, reason: 'invalid' };
-  }
-
-  const [h, min] = input.time.split(':').map(Number);
-  const target = new Date(
-    parsedDate.getFullYear(),
-    parsedDate.getMonth(),
-    parsedDate.getDate(),
-    h,
-    min,
-  );
-  if (target.getTime() <= now.getTime()) {
-    return { ok: false, reason: 'past' };
-  }
-
-  const slot = getSlotsForDate(parsedDate).find((s) => s.time === input.time);
-  if (!slot || slot.busy) {
-    return { ok: false, reason: 'busy' };
-  }
-
-  if (isSlotTaken(state, input.date, input.time)) {
-    return { ok: false, reason: 'taken' };
-  }
-
-  const appointment: Appointment = {
-    id,
-    petId: input.petId,
-    date: input.date,
-    time: input.time,
-    reasonKey: 'visit',
-    doctorKey: 'koval',
-    demoAdded: true,
-  };
-
-  return {
-    ok: true,
-    appointment,
-    state: {
-      ...state,
-      appointments: [...state.appointments, appointment],
-    },
-  };
-}
-
-export function upcomingAppointments(state: AccountState, petId: string, now: Date): Appointment[] {
+/** Pending or confirmed appointments that haven't started yet, soonest first. */
+export function upcomingAppointments(state: DemoState, petId: string, now: ClinicNow): Appointment[] {
   return state.appointments
-    .filter((a) => a.petId === petId)
-    .filter((a) => {
-      const parsed = parseISODate(a.date);
-      if (!parsed) return false;
-      const [h, min] = a.time.split(':').map(Number);
-      const target = new Date(parsed.getFullYear(), parsed.getMonth(), parsed.getDate(), h, min);
-      return target.getTime() > now.getTime();
-    })
-    .sort((a, b) => compareDateTime(a.date, a.time, b.date, b.time));
+    .filter((a) => a.petId === petId && isActive(a) && !hasStarted(a.date, a.time, now))
+    .sort(byDateTime);
 }
 
-export function nextAppointment(state: AccountState, petId: string, now: Date): Appointment | null {
+export function nextAppointment(state: DemoState, petId: string, now: ClinicNow): Appointment | null {
   return upcomingAppointments(state, petId, now)[0] ?? null;
 }
 
-export function nextVaccination(state: AccountState, petId: string, today: Date): Vaccination | null {
-  const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+/** Cancelled appointments that were still ahead — shown so the visitor sees the change. */
+export function cancelledUpcoming(state: DemoState, petId: string, now: ClinicNow): Appointment[] {
+  return state.appointments
+    .filter((a) => a.petId === petId && a.status === 'cancelled' && !hasStarted(a.date, a.time, now))
+    .sort(byDateTime);
+}
+
+export function nextVaccination(state: DemoState, petId: string, now: ClinicNow): Vaccination | null {
   const upcoming = state.vaccinations
-    .filter((v) => v.petId === petId && v.nextDate !== null)
-    .filter((v) => {
-      const parsed = parseISODate(v.nextDate as string);
-      return parsed !== null && parsed.getTime() >= todayMidnight.getTime();
-    })
+    .filter((v) => v.petId === petId && v.nextDate !== null && v.nextDate >= now.date)
     .sort((a, b) => (a.nextDate as string).localeCompare(b.nextDate as string));
   return upcoming[0] ?? null;
 }
 
-export function visitsFor(state: AccountState, petId: string): Visit[] {
-  return state.visits
-    .filter((v) => v.petId === petId)
-    .sort((a, b) => b.date.localeCompare(a.date));
+/** Visit history = completed appointments, newest first. */
+export function visitsFor(state: DemoState, petId: string): Appointment[] {
+  return state.appointments
+    .filter((a) => a.petId === petId && a.status === 'completed')
+    .sort((a, b) => byDateTime(b, a));
 }
 
-export function vaccinationsFor(state: AccountState, petId: string): Vaccination[] {
+export function vaccinationsFor(state: DemoState, petId: string): Vaccination[] {
   return state.vaccinations
     .filter((v) => v.petId === petId)
     .sort((a, b) => b.date.localeCompare(a.date));
 }
 
-export function documentsFor(state: AccountState, petId: string): PetDocument[] {
+export function documentsFor(state: DemoState, petId: string): PetDocument[] {
   return state.documents
     .filter((d) => d.petId === petId)
     .sort((a, b) => b.date.localeCompare(a.date));
