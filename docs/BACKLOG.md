@@ -36,7 +36,7 @@ Status legend: `Done` (implemented & verified) · `Todo` · `Backlog` (roadmap /
 | ASSET-1 | Source rights-cleared photos + credits | Done | Unsplash License; `CREDITS.md` |
 | QA-1 | Verification: build, typecheck, responsive, interactions, console | Done (Chromium) | Passes; other browsers pending (see QA-2) |
 | DOCS-1 | Documentation: SPEC, README, backlog | Done | This spec + English README |
-| QA-2 | Cross-browser / device check (Safari/iOS, Firefox) | Todo | Manual pass on real Safari/iOS |
+| QA-2 | Cross-browser / device check (Safari/iOS, Firefox) | Partly done | Automated pass (Playwright) on Firefox 155 and WebKit 26.6, desktop + narrow + iPhone 15 **emulation**: 3 languages, menu, language switch, calendar, form, emergency modal, no overflow, clean console. Fixed month-name casing (PR #10). Pending: manual check on a real iPhone (owner). |
 | DEPLOY-1 | Deploy to Vercel | Done | Live: https://vetcare-clinic-pi.vercel.app (auto-deploys from `main`) |
 
 ## Roadmap (backlog — out of current scope)
