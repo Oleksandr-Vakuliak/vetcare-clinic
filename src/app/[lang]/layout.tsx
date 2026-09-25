@@ -29,11 +29,8 @@ export async function generateMetadata({ params }: LangParams): Promise<Metadata
     title: dict.meta.title,
     description: dict.meta.description,
     alternates: {
-      languages: {
-        ro: '/ro',
-        uk: '/uk',
-        en: '/en',
-      },
+      // Generated from `locales`, so a new language gets its hreflang link automatically.
+      languages: Object.fromEntries(locales.map((l) => [localeMeta[l].htmlLang, `/${l}`])),
     },
   };
 }
