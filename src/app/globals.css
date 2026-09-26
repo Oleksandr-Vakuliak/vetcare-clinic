@@ -318,7 +318,9 @@ button {
 .nav {
   display: flex;
   align-items: center;
-  gap: 2rem;
+  /* Five desktop links (incl. Prices) — kept slightly tighter than 2rem so the row
+     still fits at ~1024px alongside the account link and language switcher. */
+  gap: 1.5rem;
 }
 .header__desktop .nav {
   margin-inline: auto;
