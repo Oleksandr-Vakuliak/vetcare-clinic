@@ -42,3 +42,34 @@ export function telegramLink(value: string | null): string | null {
  * Change it together with a custom domain.
  */
 export const siteUrl = 'https://vetcare-clinic-pi.vercel.app';
+
+// Prices shown in the "Prices" section on the home page (§5.3.1 in docs/SPEC.md).
+// Item names live in the dictionaries (`dict.prices.groups`); the amounts live here,
+// in one place, so the client edits a single file to update prices for all four
+// languages. Demo amounts only — not a real clinic's price list.
+
+export const priceCurrency = 'RON';
+
+export interface PriceItem {
+  amount: number;
+}
+
+/**
+ * Exactly six groups, same fixed order as `services.items` in the dictionaries:
+ * checkup, vaccination, tests, dentistry, ultrasound, consultation. Each group has
+ * exactly two amounts, matching the two item names in `dict.prices.groups[i].items`.
+ */
+export const priceList: PriceItem[][] = [
+  // checkup: primary exam, repeat exam
+  [{ amount: 180 }, { amount: 120 }],
+  // vaccination: combined vaccine (cat/dog), rabies vaccine
+  [{ amount: 250 }, { amount: 180 }],
+  // tests: complete blood count, biochemistry panel
+  [{ amount: 200 }, { amount: 320 }],
+  // dentistry: ultrasonic scaling, tooth extraction (from)
+  [{ amount: 350 }, { amount: 280 }],
+  // ultrasound: abdominal ultrasound, cardiac ultrasound
+  [{ amount: 300 }, { amount: 380 }],
+  // consultation: nutrition & care consultation, online consultation (demo)
+  [{ amount: 150 }, { amount: 120 }],
+];

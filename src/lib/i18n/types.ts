@@ -16,6 +16,7 @@ export interface Dictionary {
     emergency: string;
     /** Secondary link to the demo pet account (/[locale]/account). */
     account: string;
+    prices: string;
   };
   header: {
     clinicName: string;
@@ -51,6 +52,21 @@ export interface Dictionary {
     /** Note that the team profiles are fictional / for demonstration. */
     demoNote: string;
     team: Array<{ name: string; role: string; bio: string; imageAlt: string }>;
+  };
+  prices: {
+    title: string;
+    /** Short intro line above the price groups. */
+    note: string;
+    /** Template for a starting price; "{price}" is replaced with the formatted amount,
+     * e.g. "від {price}" / "from {price}". */
+    from: string;
+    /** Prices are demonstrative/approximate; the exact cost is set after the exam. */
+    demoNote: string;
+    /** Exactly six groups, same fixed order as `services.items`:
+     * checkup, vaccination, tests, dentistry, ultrasound, consultation.
+     * Each group has exactly two item names; the matching amounts live in
+     * `priceList` in `site-config.ts` (same order). */
+    groups: Array<{ items: string[] }>;
   };
   booking: {
     title: string;

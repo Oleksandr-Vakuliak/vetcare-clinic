@@ -14,6 +14,7 @@ const dict: Dictionary = {
     contacts: "Contacts",
     emergency: "Emergency",
     account: "Pet account",
+    prices: "Prices",
   },
   header: {
     clinicName: "VetClinic",
@@ -66,6 +67,20 @@ const dict: Dictionary = {
         title: "Consultation",
         description: "Advice on care, nutrition, and preventive health.",
       },
+    ],
+  },
+  prices: {
+    title: "Prices",
+    note: "Approximate prices for our main services.",
+    from: "from {price}",
+    demoNote: "Demo prices. The exact cost is set by the vet after the exam.",
+    groups: [
+      { items: ["Initial exam", "Follow-up exam"] },
+      { items: ["Combined vaccine (cat/dog)", "Rabies vaccine"] },
+      { items: ["Complete blood count", "Biochemistry panel"] },
+      { items: ["Ultrasonic scaling", "Tooth extraction (from)"] },
+      { items: ["Abdominal ultrasound", "Cardiac ultrasound"] },
+      { items: ["Nutrition & care consultation", "Online consultation (demo)"] },
     ],
   },
   about: {
