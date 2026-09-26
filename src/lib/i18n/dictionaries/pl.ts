@@ -78,9 +78,9 @@ const dict: Dictionary = {
       { items: ['Wizyta pierwsza', 'Wizyta kontrolna'] },
       { items: ['Szczepionka skojarzona (kot/pies)', 'Szczepionka przeciw wściekliźnie'] },
       { items: ['Morfologia krwi', 'Badanie biochemiczne'] },
-      { items: ['Skaling ultradźwiękowy', 'Ekstrakcja zęba (od)'] },
+      { items: ['Skaling ultradźwiękowy', 'Ekstrakcja zęba'] },
       { items: ['USG jamy brzusznej', 'USG serca'] },
-      { items: ['Konsultacja żywieniowa i pielęgnacyjna', 'Konsultacja online (demo)'] },
+      { items: ['Konsultacja żywieniowa i pielęgnacyjna', 'Konsultacja online'] },
     ],
   },
   about: {

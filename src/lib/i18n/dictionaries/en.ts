@@ -78,9 +78,9 @@ const dict: Dictionary = {
       { items: ["Initial exam", "Follow-up exam"] },
       { items: ["Combined vaccine (cat/dog)", "Rabies vaccine"] },
       { items: ["Complete blood count", "Biochemistry panel"] },
-      { items: ["Ultrasonic scaling", "Tooth extraction (from)"] },
+      { items: ["Ultrasonic scaling", "Tooth extraction"] },
       { items: ["Abdominal ultrasound", "Cardiac ultrasound"] },
-      { items: ["Nutrition & care consultation", "Online consultation (demo)"] },
+      { items: ["Nutrition & care consultation", "Online consultation"] },
     ],
   },
   about: {

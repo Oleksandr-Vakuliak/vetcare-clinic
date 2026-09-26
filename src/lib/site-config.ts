@@ -66,10 +66,10 @@ export const priceList: PriceItem[][] = [
   [{ amount: 250 }, { amount: 180 }],
   // tests: complete blood count, biochemistry panel
   [{ amount: 200 }, { amount: 320 }],
-  // dentistry: ultrasonic scaling, tooth extraction (from)
+  // dentistry: ultrasonic scaling, tooth extraction
   [{ amount: 350 }, { amount: 280 }],
   // ultrasound: abdominal ultrasound, cardiac ultrasound
   [{ amount: 300 }, { amount: 380 }],
-  // consultation: nutrition & care consultation, online consultation (demo)
+  // consultation: nutrition & care consultation, online consultation
   [{ amount: 150 }, { amount: 120 }],
 ];

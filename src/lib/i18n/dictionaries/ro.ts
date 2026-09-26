@@ -78,9 +78,9 @@ const dict: Dictionary = {
       { items: ["Consultație primară", "Consultație repetată"] },
       { items: ["Vaccin complex (pisică/câine)", "Vaccin antirabic"] },
       { items: ["Hemoleucogramă completă", "Analiză biochimică"] },
-      { items: ["Detartraj cu ultrasunete", "Extracție dentară (de la)"] },
+      { items: ["Detartraj cu ultrasunete", "Extracție dentară"] },
       { items: ["Ecografie abdominală", "Ecografie cardiacă"] },
-      { items: ["Consultanță alimentație și îngrijire", "Consultanță online (demo)"] },
+      { items: ["Consultanță privind alimentația și îngrijirea", "Consultanță online"] },
     ],
   },
   about: {
