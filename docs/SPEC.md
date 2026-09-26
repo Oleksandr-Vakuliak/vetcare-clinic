@@ -259,7 +259,12 @@ Pages are `noindex`.
    Search by pet or owner name; filters by date (or period: upcoming / past / all), doctor,
    status. Details (incl. change history), create, confirm, reschedule, complete, cancel
    (with confirmation). Cancelled records stay in the list (history).
-3. *Schedule.* Day or week view for a chosen doctor. Set weekly working hours and a break
+3. *Schedule.* Day or week view for a chosen doctor. The week view is a grid (#24): rows are the
+   30-minute slots the doctor works on any day of that week, columns Mon–Sun; cells show free /
+   booked (pet name, colour by status) / closed / break / not working / past, with a legend. A
+   booked cell opens the appointment details; a day heading opens that day. Closing and
+   reopening single slots stays in the day view so a dense grid can't close a slot by accident.
+   On phones the grid scrolls inside its card. Set weekly working hours and a break
    per weekday; close a single slot for booking and reopen it. If a change would affect
    existing active appointments, the conflicts are listed and the change is refused until
    they are rescheduled or cancelled — records are never removed silently.
