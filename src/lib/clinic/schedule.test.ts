@@ -1,5 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { addDays } from '../account/dates.ts';
 import { createAppointment } from './appointments.ts';
 import { defaultWeek } from './config.ts';
 import {
@@ -10,6 +11,7 @@ import {
   reopenSlot,
   setDoctorWeek,
   validateDayHours,
+  weekGrid,
 } from './schedule.ts';
 import { NOW, emptyState } from './test-utils.ts';
 import type { DayHours, DemoState } from './types.ts';
@@ -122,4 +124,50 @@ test('free slot count and doctor "now" state', () => {
   assert.equal(doctorNowState(state, 'koval', { date: NOW.date, time: '13:10' }), 'break');
   const booked = withBooking('10:00');
   assert.equal(doctorNowState(booked, 'koval', { date: MONDAY, time: '10:20' }), 'appointment');
+});
+
+test('week grid: rows are the union of working times, cells line up with them', () => {
+  const grid = weekGrid(withBooking('10:00'), 'koval', MONDAY, NOW);
+  // koval: Mon–Fri 09:00–17:00 (break 13:00–14:00), Sat 09:00–14:00, Sun off.
+  assert.equal(grid.times.length, 16);
+  assert.equal(grid.times[0], '09:00');
+  assert.equal(grid.times.at(-1), '16:30');
+  assert.deepEqual(grid.days.map((d) => d.date), [
+    '2026-09-28', '2026-09-29', '2026-09-30', '2026-10-01', '2026-10-02', '2026-10-03', '2026-10-04',
+  ]);
+  for (const day of grid.days) assert.equal(day.cells.length, grid.times.length);
+
+  const at = (day: number, time: string) => grid.days[day].cells[grid.times.indexOf(time)];
+  assert.equal(at(0, '10:00')?.state, 'booked');
+  assert.equal(at(0, '10:00')?.appointment?.id, 'a1');
+  assert.equal(at(0, '13:00')?.state, 'break');
+  assert.equal(at(1, '10:00')?.state, 'free');
+  assert.equal(at(5, '13:30')?.state, 'free', 'Saturday until 14:00');
+  assert.equal(at(5, '14:00'), null, 'Saturday ends at 14:00');
+  assert.equal(grid.days[6].hours, null);
+  assert.ok(grid.days[6].cells.every((c) => c === null), 'Sunday off');
+});
+
+test('week grid marks past and closed slots and collects appointments outside the hours', () => {
+  const closed = closeSlot(emptyState(), 'koval', MONDAY, '11:00', NOW);
+  assert.equal(closed.ok, true);
+  if (!closed.ok) return;
+  // The 16:00 booking no longer fits once Monday ends at 12:00.
+  const state: DemoState = {
+    ...closed.state,
+    appointments: withBooking('16:00').appointments,
+    schedules: closed.state.schedules.map((s) =>
+      s.doctorId === 'koval' ? { ...s, week: week({ start: '09:00', end: '12:00', breakStart: null, breakEnd: null }) } : s,
+    ),
+  };
+
+  const current = weekGrid(state, 'koval', addDays(MONDAY, -7), NOW);
+  const friday = current.days[4];
+  assert.equal(friday.date, NOW.date);
+  assert.equal(friday.cells[current.times.indexOf('09:30')]?.past, true);
+  assert.equal(friday.cells[current.times.indexOf('10:30')]?.past, false);
+
+  const next = weekGrid(state, 'koval', MONDAY, NOW);
+  assert.equal(next.days[0].cells[next.times.indexOf('11:00')]?.state, 'closed');
+  assert.deepEqual(next.days[0].outside.map((a) => a.id), ['a1']);
 });
