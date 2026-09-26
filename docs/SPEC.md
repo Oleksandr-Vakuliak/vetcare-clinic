@@ -99,6 +99,24 @@ simple icon and short description. No extra pages or dead buttons.
 - AC: six localized horizontal cards (round icon left, title + text right) in a responsive
   grid (1→2→3 columns); inline SVG icons.
 
+### 5.3.1 Prices
+
+A "Prices" section right after Services and before About, grouped by the same six
+services and in the same fixed order (checkup, vaccination, tests, dentistry, ultrasound,
+consultation), two priced items per group (12 rows). Group titles reuse
+`dict.services.items[i].title`; item names live in `dict.prices.groups`; the numeric
+amounts live in one place, `priceList` in `src/lib/site-config.ts` (RON, `priceCurrency`),
+so the client edits amounts once for all four languages. Each row shows the item name and
+a starting price, e.g. "від {price}" / "from {price}" (`dict.prices.from`), formatted with
+`Intl.NumberFormat(locale, { style: 'currency', currency: 'RON', maximumFractionDigits: 0 })`
+using the same BCP-47 tags as `localeMeta[locale].intl`. A visible note
+(`dict.prices.demoNote`) states the prices are demonstrative/approximate and the exact
+cost is set by the vet after the exam — no invented discounts or "best price" claims.
+- AC: RO/UK/EN/PL; a nav link `#prices` in the header (desktop + mobile); responsive grid
+  of group cards (1→2→3 columns); semantic markup (`h3` per group, a `dl` of rows); no
+  horizontal overflow at 320 px; visible focus; no animations; lint, TypeScript, tests and
+  build pass.
+
 ### 5.4 About & team
 Short text and two veterinarian cards. Fictional clinic — no invented awards, reviews,
 licenses, or credential claims. Profiles marked as demonstration.
