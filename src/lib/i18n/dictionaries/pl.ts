@@ -14,6 +14,7 @@ const dict: Dictionary = {
     contacts: 'Kontakt',
     emergency: 'Pilna pomoc',
     account: 'Konto pupila',
+    prices: 'Cennik',
   },
   header: {
     clinicName: 'VetKlinika',
@@ -66,6 +67,20 @@ const dict: Dictionary = {
         title: 'Konsultacja',
         description: 'Porady dotyczące pielęgnacji, żywienia i profilaktyki.',
       },
+    ],
+  },
+  prices: {
+    title: 'Cennik',
+    note: 'Orientacyjne ceny głównych usług kliniki.',
+    from: 'od {price}',
+    demoNote: 'Ceny demonstracyjne. Dokładny koszt ustala lekarz po badaniu.',
+    groups: [
+      { items: ['Wizyta pierwsza', 'Wizyta kontrolna'] },
+      { items: ['Szczepionka skojarzona (kot/pies)', 'Szczepionka przeciw wściekliźnie'] },
+      { items: ['Morfologia krwi', 'Badanie biochemiczne'] },
+      { items: ['Skaling ultradźwiękowy', 'Ekstrakcja zęba'] },
+      { items: ['USG jamy brzusznej', 'USG serca'] },
+      { items: ['Konsultacja żywieniowa i pielęgnacyjna', 'Konsultacja online'] },
     ],
   },
   about: {

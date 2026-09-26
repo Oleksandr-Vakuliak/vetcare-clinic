@@ -14,6 +14,7 @@ const dict: Dictionary = {
     contacts: "Contact",
     emergency: "Urgențe",
     account: "Contul animalului",
+    prices: "Prețuri",
   },
   header: {
     clinicName: "VetClinic",
@@ -66,6 +67,20 @@ const dict: Dictionary = {
         title: "Consultanță",
         description: "Sfaturi privind îngrijirea, alimentația și prevenția.",
       },
+    ],
+  },
+  prices: {
+    title: "Prețuri",
+    note: "Prețuri orientative pentru serviciile noastre principale.",
+    from: "de la {price}",
+    demoNote: "Prețuri demonstrative. Costul exact este stabilit de medic după consultație.",
+    groups: [
+      { items: ["Consultație primară", "Consultație repetată"] },
+      { items: ["Vaccin complex (pisică/câine)", "Vaccin antirabic"] },
+      { items: ["Hemoleucogramă completă", "Analiză biochimică"] },
+      { items: ["Detartraj cu ultrasunete", "Extracție dentară"] },
+      { items: ["Ecografie abdominală", "Ecografie cardiacă"] },
+      { items: ["Consultanță privind alimentația și îngrijirea", "Consultanță online"] },
     ],
   },
   about: {

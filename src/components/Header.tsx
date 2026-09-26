@@ -18,6 +18,7 @@ export default function Header({ dict, locale }: Props) {
 
   const navItems = [
     { href: '#services', label: dict.nav.services },
+    { href: '#prices', label: dict.nav.prices },
     { href: '#team', label: dict.nav.doctors },
     { href: '#booking', label: dict.nav.booking },
     { href: '#contacts', label: dict.nav.contacts },

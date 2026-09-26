@@ -23,6 +23,7 @@ Status legend: `Done` (implemented & verified) · `Todo` · `Backlog` (roadmap /
 | SEC-HEADER | Header + mobile menu + language switcher | Done | Sticky; hamburger; `aria-current`; closes on Escape/link |
 | SEC-HERO | Hero (non-lazy image, contrast, two CTAs) | Done | Localized heading/subtitle; eager hero image |
 | SEC-SERVICES | Services — six cards with icons | Done | 6 localized cards; responsive 1→2→3 grid |
+| SEC-PRICES | Prices — grouped price list (6 groups × 2 items), demo note, header nav link (#25) | Done | SPEC §5.3.1. Amounts in `site-config.ts` (RON); localized `Intl.NumberFormat`; 1→2→3 grid; no overflow at 320px |
 | SEC-ABOUT | About + team (two demo profiles, demo note) | Done | Intro + demo note + 2 cards |
 | SEC-BOOKING | Booking calendar + form (demo slots, past disabled, validation, intl phone, demo success, no data) | Done | Verified in browser |
 | SEC-MESSENGERS | Messengers (WhatsApp/Telegram, demo mode) | Done | Demo message when unconfigured; live when set |
