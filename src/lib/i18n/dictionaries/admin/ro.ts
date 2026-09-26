@@ -193,7 +193,6 @@ const admin: AdminDictionary = {
     time: 'Ora',
     offHours: 'Nu lucrează',
     legend: 'Legendă',
-    summary: 'Programări: {booked} · libere: {free} · închise: {closed}',
     outsideTitle: 'Programări în afara orelor de lucru',
     conflictTitle: 'Nesalvat: modificarea afectează programări existente',
     conflictText: 'Reprogramați sau anulați mai întâi aceste programări (secțiunea „Programări”), apoi salvați din nou orele.',

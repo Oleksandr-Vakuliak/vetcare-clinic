@@ -193,7 +193,6 @@ const admin: AdminDictionary = {
     time: 'Time',
     offHours: 'Not working',
     legend: 'Legend',
-    summary: 'Booked: {booked} · free: {free} · closed: {closed}',
     outsideTitle: 'Appointments outside working hours',
     conflictTitle: 'Not saved: the change affects existing appointments',
     conflictText: 'Reschedule or cancel these appointments first (Appointments section), then save the hours again.',

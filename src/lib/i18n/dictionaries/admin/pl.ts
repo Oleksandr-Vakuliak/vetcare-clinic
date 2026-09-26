@@ -193,7 +193,6 @@ const admin: AdminDictionary = {
     time: 'Godzina',
     offHours: 'Nie pracuje',
     legend: 'Legenda',
-    summary: 'Wizyty: {booked} · wolne: {free} · zamknięte: {closed}',
     outsideTitle: 'Wizyty poza godzinami pracy',
     conflictTitle: 'Nie zapisano: zmiana dotyczy istniejących wizyt',
     conflictText: 'Najpierw przełóż lub odwołaj te wizyty (sekcja „Wizyty”), a potem zapisz godziny ponownie.',
