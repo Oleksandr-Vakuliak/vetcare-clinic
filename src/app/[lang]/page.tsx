@@ -6,6 +6,7 @@ import EmergencyFab from '@/components/EmergencyFab';
 import Hero from '@/components/Hero';
 import DemoGuide from '@/components/DemoGuide';
 import Services from '@/components/Services';
+import Prices from '@/components/Prices';
 import About from '@/components/About';
 import Booking from '@/components/Booking';
 import Messengers from '@/components/Messengers';
@@ -28,6 +29,7 @@ export default async function Page({ params }: Props) {
         <Hero dict={dict} />
         <DemoGuide dict={dict} locale={lang} />
         <Services dict={dict} />
+        <Prices dict={dict} locale={lang} />
         <About dict={dict} />
 
         <section id="booking" className="section section--tint">
