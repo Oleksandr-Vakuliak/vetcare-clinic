@@ -182,6 +182,14 @@ export interface AdminDictionary {
     close: string;
     reopen: string;
     openDay: string;
+    /** Week grid: table caption "{name}: тиждень {range}". */
+    gridCaption: string;
+    /** Short hint above the grid. */
+    gridHint: string;
+    time: string;
+    /** Grid cell outside the doctor's hours. */
+    offHours: string;
+    legend: string;
     /** "{booked} записів · {free} вільно · {closed} закрито" */
     summary: string;
     outsideTitle: string;
