@@ -1,6 +1,7 @@
 // Doctors' working hours, breaks, closed slots and slot availability.
 // Every appointment lasts SLOT_MINUTES and starts on that grid (v1 limitation).
 
+import { addDays } from '../account/dates.ts';
 import { DAY_END, DAY_START, DOCTORS, SLOT_MINUTES } from './config.ts';
 import { dateTimeKey, fromMinutes, hasStarted, isTime, toMinutes, weekdayIndex } from './time.ts';
 import type { ClinicNow } from './time.ts';
@@ -154,6 +155,35 @@ export function doctorDay(
     (a) => isActive(a) && a.doctorId === doctorId && a.date === date && !fitsHours(hours, a.time),
   );
   return { hours, slots, outside };
+}
+
+export interface WeekGridDay {
+  date: string;
+  hours: DayHours | null;
+  /** Aligned with `times`; null = the doctor doesn't work at that time on this day. */
+  cells: Array<DoctorSlot | null>;
+  outside: Appointment[];
+}
+
+/** A doctor's week as a time × day grid; rows are every slot time the doctor works on any day. */
+export function weekGrid(
+  state: DemoState,
+  doctorId: string,
+  weekStart: string,
+  now: ClinicNow,
+): { times: string[]; days: WeekGridDay[] } {
+  const week = Array.from({ length: 7 }, (_, i) => {
+    const date = addDays(weekStart, i);
+    return { date, ...doctorDay(state, doctorId, date, now) };
+  });
+  const times = [...new Set(week.flatMap((day) => day.slots.map((slot) => slot.time)))].sort();
+  const days = week.map(({ date, hours, slots, outside }) => ({
+    date,
+    hours,
+    cells: times.map((time) => slots.find((slot) => slot.time === time) ?? null),
+    outside,
+  }));
+  return { times, days };
 }
 
 export type DoctorNow = 'appointment' | 'break' | 'free' | 'off';
