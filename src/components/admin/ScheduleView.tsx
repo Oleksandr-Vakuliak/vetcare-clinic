@@ -4,8 +4,9 @@ import { useId, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { addDays } from '@/lib/account/dates';
 import { DOCTORS, SLOT_MINUTES, isDoctorId } from '@/lib/clinic/config';
-import { closeSlot, doctorDay, reopenSlot } from '@/lib/clinic/schedule';
+import { closeSlot, doctorDay, reopenSlot, weekGrid } from '@/lib/clinic/schedule';
 import type { DoctorSlot } from '@/lib/clinic/schedule';
+import type { Appointment } from '@/lib/clinic/types';
 import { clinicNow, weekdayIndex } from '@/lib/clinic/time';
 import { appointmentPet, doctorName, fill, statusLabel } from '../account/format';
 import { commitDemo, useDemoState } from '../demo-store';
@@ -15,9 +16,10 @@ import HoursDialog from './HoursDialog';
 import { formatLongDate, formatShortDate, formatWhen } from './format';
 import { useAppointmentActions } from './useAppointmentActions';
 
-// "Розклад": a doctor's day or week. Working hours and breaks are edited in a
-// dialog; single slots can be closed and reopened. A booked slot can't be closed —
-// the conflict is explained and the appointment has to be moved or cancelled first.
+// "Розклад": a doctor's day or a week grid (time × weekday). Working hours and breaks
+// are edited in a dialog; single slots can be closed and reopened in the day view. A
+// booked slot can't be closed — the conflict is explained and the appointment has to be
+// moved or cancelled first.
 export default function ScheduleView() {
   const { a, d, locale, notify } = useAdmin();
   const s = a.schedule;
@@ -175,57 +177,139 @@ export default function ScheduleView() {
             })}
           </ul>
         )}
-        {day.outside.length > 0 && (
-          <div className="admin-conflict">
-            <p>
-              <strong>{s.outsideTitle}</strong>
-            </p>
-            <ul>
-              {day.outside.map((x) => (
-                <li key={x.id}>
-                  <button type="button" className="link-btn" onClick={(e) => actions.openDetails(x.id, e.currentTarget)}>
-                    {formatWhen(x.date, x.time, locale)} — {appointmentPet(x, state!.pets, d).name}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+        {renderOutside(day.outside)}
       </div>
     );
   }
 
-  function renderWeek() {
+  function renderOutside(list: Appointment[]) {
+    if (list.length === 0) return null;
     return (
-      <ul className="schedule-week">
-        {Array.from({ length: 7 }, (_, i) => {
-          const iso = addDays(weekStart, i);
-          const info = doctorDay(state!, doctorId, iso, now);
-          const count = (st: string) => info.slots.filter((x) => x.state === st && (st === 'booked' || !x.past)).length;
-          return (
-            <li key={iso} className={`admin-card week-day${iso === now.date ? ' is-today' : ''}`}>
-              <h3 className="week-day__title">{formatShortDate(iso, locale)}</h3>
-              <p className="week-day__hours">{info.hours ? hoursLine(info.hours) : s.dayOff}</p>
-              {info.hours && (
-                <p className="record-row__muted">
-                  {fill(s.summary, { booked: count('booked'), free: count('free'), closed: count('closed') })}
-                </p>
-              )}
-              <button
-                type="button"
-                className="btn btn--outline btn--sm"
-                aria-label={`${s.openDay}: ${formatShortDate(iso, locale)}`}
-                onClick={() => {
-                  setDate(iso);
-                  setView('day');
-                }}
-              >
-                {s.openDay}
+      <div className="admin-conflict">
+        <p>
+          <strong>{s.outsideTitle}</strong>
+        </p>
+        <ul>
+          {list.map((x) => (
+            <li key={x.id}>
+              <button type="button" className="link-btn" onClick={(e) => actions.openDetails(x.id, e.currentTarget)}>
+                {formatWhen(x.date, x.time, locale)} — {appointmentPet(x, state!.pets, d).name}
               </button>
             </li>
-          );
-        })}
-      </ul>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+
+  function openDay(iso: string) {
+    setDate(iso);
+    setView('day');
+  }
+
+  // Week grid: rows are 30-minute slots, columns are Mon–Sun. Only booked cells are
+  // interactive (details); closing and reopening stay in the day view on purpose.
+  function renderWeek() {
+    const grid = weekGrid(state!, doctorId, weekStart, now);
+    const range = `${formatShortDate(weekStart, locale)} – ${formatShortDate(addDays(weekStart, 6), locale)}`;
+    const legend = [
+      ['free', s.states.free],
+      ['booked', s.states.booked],
+      ['pending', statusLabel('pending', d)],
+      ['closed', s.states.closed],
+      ['break', s.states.break],
+      ['off', s.offHours],
+      ['past', s.states.past],
+    ] as const;
+    return (
+      <div className="schedule-grid">
+        <p className="record-row__muted">{s.gridHint}</p>
+        <ul className="grid-legend" aria-label={s.legend}>
+          {legend.map(([key, label]) => (
+            <li key={key}>
+              <span className={`grid-legend__swatch grid-cell--${key}`} aria-hidden="true" />
+              {label}
+            </li>
+          ))}
+        </ul>
+        <div className="week-grid-wrap" role="region" aria-labelledby={`${uid}-grid`} tabIndex={0}>
+          <table className="week-grid">
+            <caption id={`${uid}-grid`} className="visually-hidden">
+              {fill(s.gridCaption, { name: doctorName(doctorId, d), range })}
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col" className="week-grid__time">
+                  {s.time}
+                </th>
+                {grid.days.map((day) => (
+                  <th
+                    key={day.date}
+                    scope="col"
+                    className={day.date === now.date ? 'is-today' : undefined}
+                    aria-current={day.date === now.date ? 'date' : undefined}
+                  >
+                    <button
+                      type="button"
+                      className="week-grid__day"
+                      aria-label={`${s.openDay}: ${formatLongDate(day.date, locale)}`}
+                      onClick={() => openDay(day.date)}
+                    >
+                      {formatShortDate(day.date, locale)}
+                    </button>
+                    <span className="week-grid__hours">
+                      {day.hours ? fill(s.hoursRange, { start: day.hours.start, end: day.hours.end }) : s.dayOff}
+                    </span>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {grid.times.map((time, row) => (
+                <tr key={time}>
+                  <th scope="row" className="week-grid__time">
+                    {time}
+                  </th>
+                  {grid.days.map((day) => renderCell(day.cells[row], day.date))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        {renderOutside(grid.days.flatMap((day) => day.outside))}
+      </div>
+    );
+  }
+
+  function renderCell(slot: DoctorSlot | null, iso: string) {
+    if (!slot) {
+      return (
+        <td key={iso} className="grid-cell grid-cell--off">
+          <span className="visually-hidden">{s.offHours}</span>
+        </td>
+      );
+    }
+    const past = slot.past ? ' is-past' : '';
+    if (slot.appointment) {
+      const pet = appointmentPet(slot.appointment, state!.pets, d).name;
+      const status = statusLabel(slot.appointment.status, d);
+      return (
+        <td key={iso} className={`grid-cell grid-cell--booked grid-cell--${slot.appointment.status}${past}`}>
+          <button
+            type="button"
+            className="grid-cell__btn"
+            aria-label={`${a.actions.details}: ${pet}, ${formatWhen(iso, slot.time, locale)}, ${status}`}
+            onClick={(e) => actions.openDetails(slot.appointment!.id, e.currentTarget)}
+          >
+            {pet}
+          </button>
+        </td>
+      );
+    }
+    return (
+      <td key={iso} className={`grid-cell grid-cell--${slot.state}${past}`}>
+        <span className="visually-hidden">{slot.past ? s.states.past : s.states[slot.state]}</span>
+      </td>
     );
   }
 }

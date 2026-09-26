@@ -190,8 +190,6 @@ export interface AdminDictionary {
     /** Grid cell outside the doctor's hours. */
     offHours: string;
     legend: string;
-    /** "{booked} записів · {free} вільно · {closed} закрито" */
-    summary: string;
     outsideTitle: string;
     conflictTitle: string;
     conflictText: string;
